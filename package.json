@@ -1,0 +1,17 @@
+{
+  "name": "noname",
+  "version": "0.1.0",
+  "description": "\"no descr\"",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toolstik/noname.git"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-exec": "^3.0.0"
+  }
+}
