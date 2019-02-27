@@ -6,11 +6,13 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FullCalendarModule } from 'ng-fullcalendar';
+import { TeacherComponent } from './teacher/teacher.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CalendarComponent
+    CalendarComponent,
+    TeacherComponent
   ],
   imports: [
     BrowserModule,
