@@ -1,0 +1,14 @@
+{
+  "name": "linguedo-teachers-service",
+  "version": "0.1.0",
+  "description": "\"Backend service\"",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toolstik/noname.git"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/google-apps-script": "^0.0.35"
+  }
+}
