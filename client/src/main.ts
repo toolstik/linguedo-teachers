@@ -8,6 +8,9 @@ if (environment.production) {
   enableProdMode();
 }
 
+// @ts-ignore
+window.googleCallback = function () { return true; };
+
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
 
