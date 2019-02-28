@@ -11,8 +11,31 @@ function execute(e) {
     return resources[e.parameter.method](body);
 }
 
+class Model {
+
+    private model: EntitySession;
+
+    constructor() {
+        const spreadsheet = SpreadsheetApp.openById('1W3fLlLxMWJJFa4qZ8iJ4JMkYtUKem2VWknlIm6-UKcg');
+
+        this.model = new EntitySession({
+            entities: {
+                teacher: {
+                    sheet: spreadsheet.getSheetByName("teacher")
+                }
+            }
+        });
+    }
+
+    get teacher(){
+        return this.model.getRepository('teacher');
+    }
+}
+
 class Resources {
+
     testMeth(i) {
+        i['hello'] = new Model().teacher.findAll();
         return i;
     }
 }

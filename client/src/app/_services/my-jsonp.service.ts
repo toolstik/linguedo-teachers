@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 @Injectable({
   providedIn: 'root'
 })
-export class TestService {
+export class MyJsonpService {
 
   url = 'https://script.google.com/macros/s/AKfycbygdFY7BEBt_DA63B9AnzJ5QMiU1jRnEIKjeL_ZRukI/exec';
 

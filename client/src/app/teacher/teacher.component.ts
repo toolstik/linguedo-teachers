@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {TestService} from "../_services/test.service";
+import {MyJsonpService} from "../_services/my-jsonp.service";
 
 @Component({
   selector: 'app-teacher',
@@ -10,13 +10,13 @@ export class TeacherComponent implements OnInit {
 
   testData:any;
 
-  constructor(private testService: TestService) {
+  constructor(private testService: MyJsonpService) {
   }
 
   ngOnInit() {
     this.testService.exec('testMeth', { param1:true, param2:'string value'}).subscribe(data =>{
       // this.testData = JSON.stringify(data);
-      this.testData = data.param2;
+      this.testData = JSON.stringify(data.hello);
     })
   }
 
