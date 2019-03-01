@@ -50,7 +50,7 @@ class CalendarService {
 
     getEvents() {
         const start = new Date(Date.parse("2019-01-01T00:00:00"));
-        const end = new Date(Date.parse("2019-03-01T00:00:00"));
+        const end = new Date(Date.parse("2019-04-01T00:00:00"));
         const events = this.calendar.getEvents(start, end);
         return events;
     }
@@ -62,7 +62,9 @@ class Resources {
         // i['hello'] = new Model().teacher.findAll();
         i['hello'] = new CalendarService().getEvents()
             .map(e => ({
+                id: e.getId(),
                 title: e.getTitle(),
+                description: e.getDescription(),
                 start: e.getStartTime(),
                 end: e.getEndTime()
 

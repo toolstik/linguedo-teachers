@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import {Subject} from 'rxjs';
 import {CalendarComponent as FullCalendarComponent} from 'ng-fullcalendar';
-import {Options} from 'fullcalendar';
+import {EventObject, Options} from 'fullcalendar';
 
 
 @Component({
@@ -44,6 +44,10 @@ export class CalendarComponent implements OnInit {
       //   }
       // ]
     };
+  }
+
+  eventClick(e: EventObject) {
+    console.log(e.start);
   }
 
   // clearEvents() {
