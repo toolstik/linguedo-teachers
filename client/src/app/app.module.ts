@@ -8,6 +8,7 @@ import {FormsModule} from '@angular/forms';
 import {FullCalendarModule} from 'ng-fullcalendar';
 import {TeacherComponent} from './teacher/teacher.component';
 import {HttpClientJsonpModule, HttpClientModule} from "@angular/common/http";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import {HttpClientJsonpModule, HttpClientModule} from "@angular/common/http";
     FormsModule,
     HttpClientJsonpModule,
     HttpClientModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

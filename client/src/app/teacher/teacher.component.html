@@ -1,5 +1,37 @@
 <div class="container-fluid" style="height: 100vh">
   <div class="row" style="height: 200px">
+    <div class="col">
+      <!--Details Begin-->
+
+        <div class="row align-items-center py-4">
+          <div class="col-md-auto">
+            <span>Teacher</span>
+          </div>
+          <div class="col">
+            <a href="mailto:teacher@linguedo.com">teacher@linguedo.com</a>
+          </div>
+        </div>
+        <div class="row align-items-center pb-4">
+          <div class="col-md-auto">
+            <span>Course</span>
+          </div>
+          <div class="col">
+            <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select course</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button class="dropdown-item">Italian for beginners</button>
+                <button class="dropdown-item">Russian for adventures</button>
+                <button class="dropdown-item">German for Masters</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!--Details End-->
+    </div>
+    <div class="col">
+
+    </div>
   </div>
   <div class="row h-50">
     <div class="col-lg-6">
