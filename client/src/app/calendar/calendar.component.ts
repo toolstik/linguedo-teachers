@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
-  OnInit
+  OnInit, Input
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { CalendarComponent as FullCalendarComponent } from 'ng-fullcalendar';
-import { Options } from 'fullcalendar';
+import {Subject} from 'rxjs';
+import {CalendarComponent as FullCalendarComponent} from 'ng-fullcalendar';
+import {Options} from 'fullcalendar';
 
 
 @Component({
@@ -15,17 +15,20 @@ import { Options } from 'fullcalendar';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnInit {
 
   calendarOptions: Options;
 
   @ViewChild(FullCalendarComponent) ucCalendar: FullCalendarComponent;
 
-  constructor() { }
+  @Input('events') events: any[];
+
+  constructor() {
+  }
 
   ngOnInit() {
     this.calendarOptions = {
-      editable: true,
+      editable: false,
       eventLimit: false,
       header: {
         left: 'prev,next today',
@@ -33,6 +36,13 @@ export class CalendarComponent {
         right: 'month,agendaWeek,agendaDay,listMonth'
       },
       events: []
+      //   [
+      //   {
+      //     title: 'Title',
+      //     start: '2019-02-20T09:00',
+      //     end: '2019-02-20T12:00'
+      //   }
+      // ]
     };
   }
 

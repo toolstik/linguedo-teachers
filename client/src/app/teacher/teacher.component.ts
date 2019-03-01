@@ -8,15 +8,17 @@ import {MyJsonpService} from "../_services/my-jsonp.service";
 })
 export class TeacherComponent implements OnInit {
 
-  testData:any;
+  testData: any;
+  events: any[];
 
   constructor(private testService: MyJsonpService) {
   }
 
   ngOnInit() {
-    this.testService.exec('testMeth', { param1:true, param2:'string value'}).subscribe(data =>{
+    this.testService.exec('testMeth', {param1: true, param2: 'string value'}).subscribe(data => {
       // this.testData = JSON.stringify(data);
-      this.testData = JSON.stringify(data.hello);
+      // this.testData = JSON.stringify(data.hello);
+      this.events = data.hello;
     })
   }
 
