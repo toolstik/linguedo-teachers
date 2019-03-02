@@ -48,27 +48,36 @@ class CalendarService {
         // var event1 = cal.getEventById("kpspv68gmgn22uvoid82jlfp8s@google.com");
     }
 
-    getEvents() {
+    private mapEvent(e: GoogleAppsScript.Calendar.CalendarEvent) {
+        return {
+            id: e.getId(),
+            title: e.getTitle(),
+            description: e.getDescription(),
+            start: e.getStartTime(),
+            end: e.getEndTime()
+
+        };
+    }
+
+    private mapMany(events:GoogleAppsScript.Calendar.CalendarEvent[]){
+        return events.map(this.mapEvent);
+    }
+
+    getAll() {
         const start = new Date(Date.parse("2019-01-01T00:00:00"));
-        const end = new Date(Date.parse("2019-04-01T00:00:00"));
+        const end = new Date(Date.parse("2020-01-01T00:00:00"));
         const events = this.calendar.getEvents(start, end);
-        return events;
+        return this.mapMany(events);
     }
 }
 
 class Resources {
 
-    testMeth(i) {
-        // i['hello'] = new Model().teacher.findAll();
-        i['hello'] = new CalendarService().getEvents()
-            .map(e => ({
-                id: e.getId(),
-                title: e.getTitle(),
-                description: e.getDescription(),
-                start: e.getStartTime(),
-                end: e.getEndTime()
+    getAllTeachers() {
+        return new Model().teacher.findAll();
+    }
 
-            }));
-        return i;
+    getAllLessons() {
+        return new CalendarService().getAll();
     }
 }

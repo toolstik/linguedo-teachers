@@ -9,12 +9,14 @@ import {FullCalendarModule} from 'ng-fullcalendar';
 import {TeacherComponent} from './teacher/teacher.component';
 import {HttpClientJsonpModule, HttpClientModule} from "@angular/common/http";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import { CheckboxComponent } from './common/checkbox/checkbox.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
-    TeacherComponent
+    TeacherComponent,
+    CheckboxComponent
   ],
   imports: [
     BrowserModule,

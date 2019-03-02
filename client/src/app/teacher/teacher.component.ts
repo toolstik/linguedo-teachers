@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {MyJsonpService} from "../_services/my-jsonp.service";
+import {TeacherService} from "../_services/teacher.service";
+import {Observable} from "rxjs";
+import {LessonService} from "../_services/lesson.service";
 
 @Component({
   selector: 'app-teacher',
@@ -8,18 +10,17 @@ import {MyJsonpService} from "../_services/my-jsonp.service";
 })
 export class TeacherComponent implements OnInit {
 
-  testData: any;
   events: any[];
+  teachers$: Observable<any>;
+  lessons$: Observable<any>;
 
-  constructor(private testService: MyJsonpService) {
+  constructor(private teacherService: TeacherService,
+              private lessonService: LessonService) {
   }
 
   ngOnInit() {
-    this.testService.exec('testMeth', {param1: true, param2: 'string value'}).subscribe(data => {
-      // this.testData = JSON.stringify(data);
-      // this.testData = JSON.stringify(data.hello);
-      this.events = data.hello;
-    })
+    this.teachers$ = this.teacherService.getAll();
+    this.lessons$ = this.lessonService.getAll();
   }
 
 }

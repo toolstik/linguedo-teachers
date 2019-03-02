@@ -1,31 +1,31 @@
 <div class="container-fluid" style="height: 100vh">
-  <div class="row" style="height: 200px">
+  <div class="row mb-2">
     <div class="col">
       <!--Details Begin-->
 
-        <div class="row align-items-center py-4">
-          <div class="col-md-auto">
-            <span>Teacher</span>
-          </div>
-          <div class="col">
-            <a href="mailto:teacher@linguedo.com">teacher@linguedo.com</a>
-          </div>
+      <div class="row align-items-center my-4">
+        <div class="col-md-auto">
+          <span>Teacher</span>
         </div>
-        <div class="row align-items-center pb-4">
-          <div class="col-md-auto">
-            <span>Course</span>
-          </div>
-          <div class="col">
-            <div ngbDropdown class="d-inline-block">
-              <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select course</button>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button class="dropdown-item">Italian for beginners</button>
-                <button class="dropdown-item">Russian for adventures</button>
-                <button class="dropdown-item">German for Masters</button>
-              </div>
+        <div class="col">
+          <a href="mailto:teacher@linguedo.com">teacher@linguedo.com</a>
+        </div>
+      </div>
+      <div class="row align-items-center mb-4">
+        <div class="col-md-auto">
+          <span>Course</span>
+        </div>
+        <div class="col">
+          <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select course</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button class="dropdown-item">Italian for beginners</button>
+              <button class="dropdown-item">Russian for adventures</button>
+              <button class="dropdown-item">German for Masters</button>
             </div>
           </div>
         </div>
+      </div>
 
       <!--Details End-->
     </div>
@@ -35,10 +35,73 @@
   </div>
   <div class="row h-50">
     <div class="col-lg-6">
-      <app-calendar [events]="events">Loading...</app-calendar>
+      <app-calendar [events]="lessons$ | async">Loading...</app-calendar>
     </div>
     <div class="col-lg-6">
-      <span>{{testData}}</span>
+
+      <div class="row mb-4">
+        <div class="col">
+          <p class="h4">Class details</p>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-4">
+          <p class="h6">Students</p>
+        </div>
+        <div class="col">
+          <p class="h6">class information</p>
+        </div>
+      </div>
+
+      <div class="row justify-content-start mb-1">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Student</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Total time</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let teacher of (teachers$ | async); index as i">
+            <!--<th scope="row">{{ i + 1 }}</th>-->
+            <td>
+              <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
+              <myCheckbox [ngModel]="true"></myCheckbox>
+            </td>
+            <td>
+              {{teacher.lastName}}
+            </td>
+            <td><ngb-timepicker [spinners]="false" [ngModel]="{hour: 13, minute: 30}"></ngb-timepicker></td>
+            <td><ngb-timepicker [spinners]="false" [ngModel]="{hour: 14, minute: 30}"></ngb-timepicker></td>
+            <td>60 minutes</td>
+          </tr>
+          </tbody>
+        </table>
+        <!--<div class="col-4">-->
+        <!--<div class="btn-group btn-group-toggle">-->
+        <!--<label class="btn-primary" ngbButtonLabel>-->
+        <!--<input type="checkbox" ngbButton> Student name-->
+        <!--</label>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-1">-->
+        <!--<div>from</div>-->
+        <!--</div>-->
+        <!--<div class="col-3">-->
+        <!--<ngb-timepicker [spinners]="false"></ngb-timepicker>-->
+        <!--</div>-->
+        <!--<div class="col-1">-->
+        <!--<div>to</div>-->
+        <!--</div>-->
+        <!--<div class="col-3">-->
+        <!--<ngb-timepicker [spinners]="false"></ngb-timepicker>-->
+        <!--</div>-->
+      </div>
+
     </div>
   </div>
 </div>
