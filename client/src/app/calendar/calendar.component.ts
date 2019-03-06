@@ -1,11 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  TemplateRef,
-  OnInit, Input
-} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {CalendarComponent as FullCalendarComponent} from 'ng-fullcalendar';
 import {EventObject, Options} from 'fullcalendar';
 
@@ -21,7 +14,8 @@ export class CalendarComponent implements OnInit {
 
   @ViewChild(FullCalendarComponent) ucCalendar: FullCalendarComponent;
 
-  @Input('events') events: any[];
+  @Input() events: any[];
+  @Output() eventSelected = new EventEmitter<EventObject>();
 
   constructor() {
   }
@@ -30,33 +24,17 @@ export class CalendarComponent implements OnInit {
     this.calendarOptions = {
       editable: false,
       eventLimit: false,
+      weekNumberCalculation:'ISO',
       header: {
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay,listMonth'
       },
       events: []
-      //   [
-      //   {
-      //     title: 'Title',
-      //     start: '2019-02-20T09:00',
-      //     end: '2019-02-20T12:00'
-      //   }
-      // ]
     };
   }
 
   eventClick(e: EventObject) {
-    console.log(e.start);
+    this.eventSelected.next(e);
   }
-
-  // clearEvents() {
-  //   this.events = [];
-  // }
-
-  // loadEvents() {
-  //   this.eventService.getEvents().subscribe(data => {
-  //     this.events = data;
-  //   });
-  // }
 }
