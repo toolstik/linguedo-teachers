@@ -7,6 +7,13 @@ function doGet(e) {
 
 function execute(e) {
     const resources = new Resources();
+
+    if (!e.parameter.method)
+        return {
+            name: 'linguedo-teachers-service',
+            date: new Date()
+        };
+
     const body = e.parameter.body != null ? JSON.parse(e.parameter.body) : null;
     return resources[e.parameter.method](body);
 }
@@ -59,7 +66,7 @@ class CalendarService {
         };
     }
 
-    private mapMany(events:GoogleAppsScript.Calendar.CalendarEvent[]){
+    private mapMany(events: GoogleAppsScript.Calendar.CalendarEvent[]) {
         return events.map(this.mapEvent);
     }
 

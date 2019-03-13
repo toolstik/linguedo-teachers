@@ -2,13 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MyJsonpService {
 
-  private url = 'https://script.google.com/macros/s/AKfycbygdFY7BEBt_DA63B9AnzJ5QMiU1jRnEIKjeL_ZRukI/exec';
+  private url = environment.service.url;
 
   constructor(private http: HttpClient) {
   }

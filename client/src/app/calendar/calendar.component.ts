@@ -25,6 +25,13 @@ export class CalendarComponent implements OnInit {
       editable: false,
       eventLimit: false,
       weekNumberCalculation:'ISO',
+      businessHours: {
+        // days of week. an array of zero-based day of week integers (0=Sunday)
+        dow: [ 1, 2, 3, 4, 5 ], // Monday - Friday
+
+        start: '9:00', // a start time (9am in this example)
+        end: '18:00', // an end time (6pm in this example)
+      },
       header: {
         left: 'prev,next today',
         center: 'title',

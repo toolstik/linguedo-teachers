@@ -1,6 +1,6 @@
 <div class="container-fluid" style="height: 100vh">
   <div class="row mb-2">
-    <div class="col-4">
+    <div class="col-xl">
       <!--Details Begin-->
 
       <div class="row align-items-center my-4">
@@ -25,11 +25,12 @@
             </div>
           </div>
         </div>
+
       </div>
 
       <!--Details End-->
     </div>
-    <div class="col-8">
+    <div class="col-xl">
 
       <div class="row">
         <div class="col">
@@ -38,25 +39,43 @@
       </div>
 
       <div class="row justify-content-start mb-1">
-        <div class="col-8">
-          <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action active">
-              Grand Master Yoda on 12 April 2019 at 1:30 PM
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">Obi-Wan Kenobi on 29 March 2019 at 9:00 AM</a>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="btn-group">
-            <button ngbButton
-                    class="btn btn-primary">
-              Apply
-            </button>
-            <button ngbButton
-                    class="btn btn-primary">
-              Decline
-            </button>
-          </div>
+        <div class="col-lg-10 col-md table-responsive">
+          <table class="table table-sm">
+            <tbody>
+            <tr>
+              <!--<th scope="row">{{ i + 1 }}</th>-->
+              <td>
+                Grand Master Yoda on 12 April 2019 at 1:30 PM
+              </td>
+              <td class="btn-group">
+                <button ngbButton
+                        class="btn btn-primary">
+                  Apply
+                </button>
+                <button ngbButton
+                        class="btn btn-outline-danger">
+                  Decline
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <!--<th scope="row">{{ i + 1 }}</th>-->
+              <td>
+                Obi-Wan Kenobi on 29 March 2019 at 9:00 AM
+              </td>
+              <td class="btn-group">
+                <button ngbButton
+                        class="btn btn-primary">
+                  Apply
+                </button>
+                <button ngbButton
+                        class="btn btn-outline-danger">
+                  Decline
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -66,10 +85,10 @@
   <hr class="my-20">
 
   <div class="row h-50">
-    <div class="col-lg-6">
+    <div class="col-xl">
       <app-calendar [events]="lessons$ | async" (eventSelected)="eventSelected($event)">Loading...</app-calendar>
     </div>
-    <div class="col-lg-6">
+    <div class="col-xl mt-3 mt-xl-0">
 
       <div class="row mb-4">
         <div class="col-4">
