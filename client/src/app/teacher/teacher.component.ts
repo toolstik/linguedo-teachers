@@ -29,4 +29,11 @@ export class TeacherComponent implements OnInit {
     this.selectedLesson = event;
   }
 
+  saveClass() {
+    this.selectedLesson = null;
+  }
+
+  cancelSaveClass() {
+    this.selectedLesson = null;
+  }
 }

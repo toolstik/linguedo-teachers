@@ -1,5 +1,5 @@
-<div class="container-fluid" style="height: 100vh">
-  <div class="row mb-2">
+<div class="container-fluid">
+  <div [hidden]="true" class="row mb-2">
     <div class="col-xl">
       <!--Details Begin-->
 
@@ -82,9 +82,47 @@
     </div>
   </div>
 
-  <hr class="my-20">
+  <div class="row align-items-center my-4">
+    <div class="col-xl">
+      <ngb-tabset>
+        <ngb-tab>
+          <ng-template ngbTabTitle>Classes</ng-template>
+          <ng-template ngbTabContent>
+            <div class="row mt-2">
+              <div class="col-xl">
+                <ng-container *ngIf="selectedLesson; then class else calendar">
+                </ng-container>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab>
+          <ng-template ngbTabTitle>Substitution proposals <span class="badge badge-primary">2</span></ng-template>
+          <ng-template ngbTabContent>
+            <div class="row mt-2">
+              <div class="col-xl">
+                <ng-container *ngTemplateOutlet="substitutionProposals"></ng-container>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab>
+          <ng-template ngbTabTitle>Substitution requests <span class="badge badge-primary">1</span></ng-template>
+          <ng-template ngbTabContent>
+            <div class="row mt-2">
+              <div class="col-xl">
+                <ng-container *ngTemplateOutlet="substitutionRequests"></ng-container>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
 
-  <div class="row h-50">
+  <!--<hr class="my-20">-->
+
+  <div *ngIf="false" class="row h-50">
     <div class="col-xl">
       <app-calendar [events]="lessons$ | async" (eventSelected)="eventSelected($event)">Loading...</app-calendar>
     </div>
@@ -111,15 +149,6 @@
               Ask substitution for this class
             </button>
           </div>
-        </div>
-      </div>
-
-      <div class="row mb-2">
-        <div class="col-4">
-          <p class="h6">Students</p>
-        </div>
-        <div class="col">
-          <p class="h6">class information</p>
         </div>
       </div>
 
@@ -166,5 +195,221 @@
 
 <ng-template #askSubstitutionPopupContent>
   <ngb-datepicker></ngb-datepicker>
+</ng-template>
+
+<ng-template #calendar>
+  <ng-container *ngIf="(lessons$ | async) as lessons; else loading">
+    <app-calendar [events]="lessons" (eventSelected)="eventSelected($event)">Loading...
+    </app-calendar>
+  </ng-container>
+</ng-template>
+
+<ng-template #loading>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #class>
+  <div class="row mb-4 justify-content-between">
+    <div class="col-auto">
+      <p class="h4">{{selectedLesson.title}} *and some other info*</p>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group" role="group">
+        <button ngbButton
+                class="btn btn-primary"
+                placement="bottom"
+                container="body"
+                (click)="saveClass()">
+          Save
+        </button>
+        <button ngbButton
+                class="btn btn-outline-secondary"
+                placement="bottom"
+                container="body"
+                (click)="cancelSaveClass()">
+          Cancel
+        </button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group" role="group">
+        <button ngbButton
+                class="btn btn-primary"
+                placement="bottom"
+                container="body"
+                [ngbPopover]="cloneDatesPopupContent">
+          Clone this class
+        </button>
+        <button ngbButton
+                class="btn btn-primary"
+                placement="bottom"
+                container="body"
+                [ngbPopover]="askSubstitutionPopupContent">
+          Ask substitution for this class
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-4">
+    <div class="col-3">
+      <span class="mr-3">Client:</span>
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+          <button class="dropdown-item">Client 1</button>
+          <button class="dropdown-item">Client 2</button>
+          <button class="dropdown-item">Client 3</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <span class="mr-3">Class type:</span>
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>Select class type</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
+          <button class="dropdown-item">Normal lesson 90 Min</button>
+          <button class="dropdown-item">Normal lesson 60 Min</button>
+          <button class="dropdown-item">Tutoring lesson 60 Min</button>
+          <button class="dropdown-item">Conversation class 60 Min</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row justify-content-start mb-1" *ngIf="(teachers$ | async) as teachers; else loading">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Student</th>
+        <th scope="col">From</th>
+        <th scope="col">To</th>
+        <th scope="col">Total time</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let teacher of teachers; index as i">
+        <!--<th scope="row">{{ i + 1 }}</th>-->
+        <td>
+          <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
+          <myCheckbox [ngModel]="true"></myCheckbox>
+        </td>
+        <td>
+          {{teacher.firstName}} {{teacher.lastName}}
+        </td>
+        <td>
+          <ngb-timepicker [spinners]="false" [ngModel]="{hour: 13, minute: 30}"></ngb-timepicker>
+        </td>
+        <td>
+          <ngb-timepicker [spinners]="false" [ngModel]="{hour: 14, minute: 30}"></ngb-timepicker>
+        </td>
+        <td>60 minutes</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+
+<ng-template #substitutionProposals>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <th>From teacher</th>
+      <th>Client</th>
+      <th>Class type</th>
+      <th>Date</th>
+      <th></th>
+      </thead>
+      <tbody>
+      <tr>
+        <!--<th scope="row">{{ i + 1 }}</th>-->
+        <td>
+          Grand Master Yoda
+        </td>
+        <td>
+          Client 1
+        </td>
+        <td>
+          Normal lesson 90 Min
+        </td>
+        <td>
+          12 April 2019 at 1:30 PM
+        </td>
+        <td class="btn-group">
+          <button ngbButton
+                  class="btn btn-primary">
+            Apply
+          </button>
+          <button ngbButton
+                  class="btn btn-outline-danger">
+            Decline
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <!--<th scope="row">{{ i + 1 }}</th>-->
+        <td>
+          Obi-Wan Kenobi
+        </td>
+        <td>
+          Client 2
+        </td>
+        <td>
+          Conversation class 60 Min
+        </td>
+        <td>
+          29 March 2019 at 9:00 AM
+        </td>
+        <td class="btn-group">
+          <button ngbButton
+                  class="btn btn-primary">
+            Apply
+          </button>
+          <button ngbButton
+                  class="btn btn-outline-danger">
+            Decline
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+
+<ng-template #substitutionRequests>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <th>Date</th>
+      <th>Client</th>
+      <th>Class type</th>
+      <th>Status</th>
+      </thead>
+      <tbody>
+      <tr>
+        <!--<th scope="row">{{ i + 1 }}</th>-->
+        <td>
+          12 April 2019 at 1:30 PM
+        </td>
+        <td>
+          Client 1
+        </td>
+        <td>
+          Normal lesson 90 Min
+        </td>
+        <td>
+          <span class="text-info">Pending</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </ng-template>
 

@@ -11,6 +11,31 @@ module.exports = function (grunt) {
         grunt.file.delete(tsFile, jsBody);
     };
 
+    function embedJs(indexFileBody) {
+        const regex = new RegExp('<script type="text/javascript" src="(.+?)"></script>', 'g');
+
+        const newBody = indexFileBody.replace(regex, function (rep, g1) {
+            const jsBody = grunt.file.read(`client/dist/client/${g1}`);
+            return `<script type="text/javascript">${jsBody}</script>`;
+        });
+
+        return newBody;
+    }
+
+    function embedCss(indexFileBody) {
+        const regex = new RegExp('<link rel="stylesheet" href="(.+?)">', 'g');
+
+        const newBody = indexFileBody.replace(regex, function (rep, g1) {
+            if (g1.startsWith('http'))
+                return rep;
+
+            const jsBody = grunt.file.read(`client/dist/client/${g1}`);
+            return `<style type="text/css">${jsBody}</style>`;
+        });
+
+        return newBody;
+    }
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -65,7 +90,7 @@ module.exports = function (grunt) {
     grunt.task.registerTask('clear:service', ['exec:clear_service_dist']);
 
     grunt.task.registerTask('copy:client:manifest', function () {
-       grunt.file.copy('service/appsscript.json', 'service/dist/appsscript.json')
+        grunt.file.copy('service/appsscript.json', 'service/dist/appsscript.json')
     });
 
     grunt.task.registerTask('compile', function (target) {
@@ -81,18 +106,14 @@ module.exports = function (grunt) {
     grunt.task.registerTask('build:client:gs:index', function () {
         const indexHtmlPath = 'client/dist/client/index.html'
         var indexHtml = grunt.file.read(indexHtmlPath);
+        indexHtml = embedJs(indexHtml);
+        indexHtml = embedCss(indexHtml);
 
-        const regex = new RegExp('<script type="text/javascript" src="(.+?)"></script>', 'g');
-
-        const newBody = indexHtml.replace(regex, function (rep, g1) {
-            const jsBody = grunt.file.read(`client/dist/client/${g1}`);
-            return `<script type="text/javascript">${jsBody}</script>`;
-        });
-        grunt.file.write('client/dist/gs/index.html', newBody);
+        grunt.file.write('client/dist/gs/index.html', indexHtml);
     });
 
     grunt.task.registerTask('build:service', ['clear:service', 'concat:service', 'compile:service', 'copy:client:manifest']);
 
-    
+
     grunt.task.registerTask('deploy:service', ['build:service', 'exec:clasp_push_service']);
 };
