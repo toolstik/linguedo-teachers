@@ -2,6 +2,11 @@ var ts2gas = require('ts2gas');
 
 module.exports = function (grunt) {
 
+    var deployments = {
+        client: 'AKfycbwlsZiyzgpdfU8b2fCyYHr8pZW61_1lULFwuw3lJLUKxdnD4CY',
+        service: 'AKfycbyBWAfpsxwPkcEotlivyAfiap8FgODlS3j7Eq8F8tAUtM8Kv7OH'
+    };
+
     function trinspileTs(tsFile, config) {
         var ts2gasConfig = grunt.file.readJSON(config).compilerOptions;
         var tsBody = grunt.file.read(tsFile);
@@ -63,7 +68,7 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            clasp_push: {
+            clasp_push_client: {
                 cwd: 'client/gs',
                 cmd: 'clasp push -f'
             },
@@ -71,12 +76,26 @@ module.exports = function (grunt) {
                 cwd: 'service',
                 cmd: 'clasp push -f'
             },
-            clear_dist: "rm -r -f client/dist/gs",
+            clasp_deploy_client: {
+                cwd: 'client/gs',
+                cmd: `clasp deploy -i ${deployments.client}`
+            },
+            clasp_deploy_service: {
+                cwd: 'service',
+                cmd: `clasp deploy -i ${deployments.service}`
+            },
+            clear_client_dist: "rm -r -f client/dist/gs",
             clear_service_dist: "rm -r -f service/dist",
             ng: {
                 cwd: 'client',
                 cmd: function (cmd) {
-                    return `ng ${cmd}`;
+                    var isProd = !!grunt.option('prod');
+                    var cmd = `ng ${cmd}`;
+
+                    if (isProd)
+                        cmd += ' --prod';
+
+                    return cmd;
                 }
 
             }
@@ -87,23 +106,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-exec');
 
-    grunt.task.registerTask('clear:service', ['exec:clear_service_dist']);
-
     grunt.task.registerTask('copy:client:manifest', function () {
         grunt.file.copy('service/appsscript.json', 'service/dist/appsscript.json')
     });
 
-    grunt.task.registerTask('compile', function (target) {
-        if (target == "service") {
-            trinspileTs("service/dist/main.ts", 'service/tsconfig.json');
-        }
+    grunt.task.registerTask('compile:service', function () {
+        trinspileTs("service/dist/main.ts", 'service/tsconfig.json');
     });
 
-    grunt.task.registerTask('build:client:gs', ['exec:clear_dist', 'copy:gs', 'exec:ng:build', 'build:client:gs:index']);
-
-    grunt.task.registerTask('deploy:client', ['build:client:gs', 'exec:clasp_push']);
-
-    grunt.task.registerTask('build:client:gs:index', function () {
+    grunt.task.registerTask('compile:client:html', function () {
         const indexHtmlPath = 'client/dist/client/index.html'
         var indexHtml = grunt.file.read(indexHtmlPath);
         indexHtml = embedJs(indexHtml);
@@ -112,8 +123,29 @@ module.exports = function (grunt) {
         grunt.file.write('client/dist/gs/index.html', indexHtml);
     });
 
+
+    grunt.task.registerTask('clear:service', ['exec:clear_service_dist']);
+    grunt.task.registerTask('clear:client', ['exec:clear_client_dist']);
+
+
+
     grunt.task.registerTask('build:service', ['clear:service', 'concat:service', 'compile:service', 'copy:client:manifest']);
 
+    grunt.task.registerTask('build:client', ['clear:client', 'copy:gs', 'exec:ng:build', 'compile:client:html']);
 
-    grunt.task.registerTask('deploy:service', ['build:service', 'exec:clasp_push_service']);
+    // grunt.task.registerTask('publish:client', ['build:client', 'exec:clasp_push_client']);
+    // grunt.task.registerTask('publish:service', ['build:service', 'exec:clasp_push_service']);
+
+    grunt.task.registerTask('publish', function (target) {
+        if (!target) {
+            grunt.task.run(['publish:service', 'publish:client']);
+            return;
+        }
+
+        grunt.task.run(`build:${target}`);
+        grunt.task.run(`exec:clasp_push_${target}`);
+
+        if (grunt.option('prod'))
+            grunt.task.run(`exec:clasp_deploy_${target}`);
+    });
 };
