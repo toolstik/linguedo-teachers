@@ -1,87 +1,4 @@
 <div class="container-fluid">
-  <div [hidden]="true" class="row mb-2">
-    <div class="col-xl">
-      <!--Details Begin-->
-
-      <div class="row align-items-center my-4">
-        <div class="col-md-auto">
-          <span>Teacher</span>
-        </div>
-        <div class="col">
-          <a href="mailto:teacher@linguedo.com">teacher@linguedo.com</a>
-        </div>
-      </div>
-      <div class="row align-items-center mb-4">
-        <div class="col-md-auto">
-          <span>Course</span>
-        </div>
-        <div class="col">
-          <div ngbDropdown class="d-inline-block">
-            <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select course</button>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-              <button class="dropdown-item">Italian for beginners</button>
-              <button class="dropdown-item">Russian for adventures</button>
-              <button class="dropdown-item">German for Masters</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!--Details End-->
-    </div>
-    <div class="col-xl">
-
-      <div class="row">
-        <div class="col">
-          <p class="h4">Active substitution proposals</p>
-        </div>
-      </div>
-
-      <div class="row justify-content-start mb-1">
-        <div class="col-lg-10 col-md table-responsive">
-          <table class="table table-sm">
-            <tbody>
-            <tr>
-              <!--<th scope="row">{{ i + 1 }}</th>-->
-              <td>
-                Grand Master Yoda on 12 April 2019 at 1:30 PM
-              </td>
-              <td class="btn-group">
-                <button ngbButton
-                        class="btn btn-primary">
-                  Apply
-                </button>
-                <button ngbButton
-                        class="btn btn-outline-danger">
-                  Decline
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <!--<th scope="row">{{ i + 1 }}</th>-->
-              <td>
-                Obi-Wan Kenobi on 29 March 2019 at 9:00 AM
-              </td>
-              <td class="btn-group">
-                <button ngbButton
-                        class="btn btn-primary">
-                  Apply
-                </button>
-                <button ngbButton
-                        class="btn btn-outline-danger">
-                  Decline
-                </button>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <div class="row align-items-center my-4">
     <div class="col-xl">
       <ngb-tabset>
@@ -90,7 +7,7 @@
           <ng-template ngbTabContent>
             <div class="row mt-2">
               <div class="col-xl">
-                <ng-container *ngIf="selectedLesson; then class else calendar">
+                <ng-container *ngIf="selectedLesson; then classView else calendar">
                 </ng-container>
               </div>
             </div>
@@ -116,75 +33,27 @@
             </div>
           </ng-template>
         </ngb-tab>
+        <ngb-tab>
+          <ng-template ngbTabTitle>Invoice data</ng-template>
+          <ng-template ngbTabContent>
+            <div class="row mt-2">
+              <div class="col-xl">
+                <ng-container *ngTemplateOutlet="invoiceData"></ng-container>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab>
+          <ng-template ngbTabTitle>Availability settings</ng-template>
+          <ng-template ngbTabContent>
+            <div class="row mt-2">
+              <div class="col-xl">
+                <ng-container *ngTemplateOutlet="availability"></ng-container>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
       </ngb-tabset>
-    </div>
-  </div>
-
-  <!--<hr class="my-20">-->
-
-  <div *ngIf="false" class="row h-50">
-    <div class="col-xl">
-      <app-calendar [events]="lessons$ | async" (eventSelected)="eventSelected($event)">Loading...</app-calendar>
-    </div>
-    <div class="col-xl mt-3 mt-xl-0">
-
-      <div class="row mb-4">
-        <div class="col-4">
-          <p class="h4">Class details</p>
-        </div>
-        <div class="col-8">
-          <div class="btn-group" role="group">
-            <button ngbButton
-                    class="btn btn-primary"
-                    placement="bottom"
-                    container="body"
-                    [ngbPopover]="cloneDatesPopupContent">
-              Clone this class
-            </button>
-            <button ngbButton
-                    class="btn btn-primary"
-                    placement="bottom"
-                    container="body"
-                    [ngbPopover]="askSubstitutionPopupContent">
-              Ask substitution for this class
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="row justify-content-start mb-1">
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Student</th>
-            <th scope="col">From</th>
-            <th scope="col">To</th>
-            <th scope="col">Total time</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let teacher of (teachers$ | async); index as i">
-            <!--<th scope="row">{{ i + 1 }}</th>-->
-            <td>
-              <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
-              <myCheckbox [ngModel]="true"></myCheckbox>
-            </td>
-            <td>
-              {{teacher.firstName}} {{teacher.lastName}}
-            </td>
-            <td>
-              <ngb-timepicker [spinners]="false" [ngModel]="{hour: 13, minute: 30}"></ngb-timepicker>
-            </td>
-            <td>
-              <ngb-timepicker [spinners]="false" [ngModel]="{hour: 14, minute: 30}"></ngb-timepicker>
-            </td>
-            <td>60 minutes</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
     </div>
   </div>
 </div>
@@ -212,7 +81,7 @@
   </div>
 </ng-template>
 
-<ng-template #class>
+<ng-template #classView>
   <div class="row mb-4 justify-content-between">
     <div class="col-auto">
       <p class="h4">{{selectedLesson.title}} *and some other info*</p>
@@ -256,8 +125,8 @@
   </div>
 
   <div class="row align-items-center mb-4">
-    <div class="col-3">
-      <span class="mr-3">Client:</span>
+    <div class="col-auto">
+      <span class="h6 mr-3">Client:</span>
       <div ngbDropdown class="d-inline-block">
         <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
@@ -268,8 +137,8 @@
       </div>
     </div>
 
-    <div class="col-3">
-      <span class="mr-3">Class type:</span>
+    <div class="col-auto">
+      <span class="h6 mr-3">Class type:</span>
       <div ngbDropdown class="d-inline-block">
         <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>Select class type</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
@@ -281,39 +150,42 @@
       </div>
     </div>
 
+    <div class="col-auto">
+      <span class="h6 mr-3">From:</span>
+      <ngb-timepicker class="d-inline-block" [spinners]="false" [ngModel]="{hour: 13, minute: 30}"></ngb-timepicker>
+    </div>
+
+    <div class="col-auto">
+      <span class="h6 mr-3">To:</span>
+      <ngb-timepicker class="d-inline-block" [spinners]="false" [ngModel]="{hour: 14, minute: 30}"></ngb-timepicker>
+    </div>
+
+
   </div>
 
-  <div class="row justify-content-start mb-1" *ngIf="(teachers$ | async) as teachers; else loading">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Student</th>
-        <th scope="col">From</th>
-        <th scope="col">To</th>
-        <th scope="col">Total time</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let teacher of teachers; index as i">
-        <!--<th scope="row">{{ i + 1 }}</th>-->
-        <td>
-          <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
-          <myCheckbox [ngModel]="true"></myCheckbox>
-        </td>
-        <td>
-          {{teacher.firstName}} {{teacher.lastName}}
-        </td>
-        <td>
-          <ngb-timepicker [spinners]="false" [ngModel]="{hour: 13, minute: 30}"></ngb-timepicker>
-        </td>
-        <td>
-          <ngb-timepicker [spinners]="false" [ngModel]="{hour: 14, minute: 30}"></ngb-timepicker>
-        </td>
-        <td>60 minutes</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="row justify-content-center mb-1" *ngIf="(teachers$ | async) as teachers; else loading">
+    <div class="col-6">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Student</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let teacher of teachers; index as i">
+          <!--<th scope="row">{{ i + 1 }}</th>-->
+          <td>
+            <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
+            <myCheckbox [ngModel]="true"></myCheckbox>
+          </td>
+          <td>
+            {{teacher.firstName}} {{teacher.lastName}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </ng-template>
 
@@ -410,6 +282,105 @@
       </tr>
       </tbody>
     </table>
+  </div>
+</ng-template>
+
+<ng-template #invoiceData>
+
+  <div class="row mb-3">
+    <div class="col">
+      <!--<input type="text" class="form-control" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()"/>-->
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" ngbDropdownToggle>Select month</button>
+        <div ngbDropdownMenu>
+          <button class="dropdown-item">January 2019</button>
+          <button class="dropdown-item">February 2019</button>
+          <button class="dropdown-item">March 2019</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+          <th style="text-align: end">Date</th>
+          <th style="text-align: center">Normal lesson 90 Min</th>
+          <th style="text-align: center">Normal lesson 60 Min</th>
+          <th style="text-align: center">Tutoring lesson 60 Min</th>
+          <th style="text-align: center">Conversation class 60 Min</th>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row" style="text-align: end">1 Feb 2019</th>
+            <td style="text-align: center">
+              {{90*2}}
+            </td>
+            <td style="text-align: center">
+              {{60*2}}
+            </td>
+            <td style="text-align: center">
+              {{60*0}}
+            </td>
+            <td style="text-align: center">
+              {{60*1}}
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" style="text-align: end">2 Feb 2019</th>
+            <td style="text-align: center">
+              {{90*1}}
+            </td>
+            <td style="text-align: center">
+              {{60*1}}
+            </td>
+            <td style="text-align: center">
+              {{60*3}}
+            </td>
+            <td style="text-align: center">
+              {{60*1}}
+            </td>
+          </tr>
+          <tr>
+            <th scope="row" style="text-align: end">3 Feb 2019</th>
+            <td style="text-align: center">
+              {{90*0}}
+            </td>
+            <td style="text-align: center">
+              {{60*2}}
+            </td>
+            <td style="text-align: center">
+              {{60*2}}
+            </td>
+            <td style="text-align: center">
+              {{60*2}}
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #availability>
+  <div class="row">
+    <div class="col-auto">
+      <span class="h5 mr-3">My availability time is from
+        <ngb-timepicker class="d-inline-block" [spinners]="false" [ngModel]="{hour: 9, minute: 0}"></ngb-timepicker>
+        to
+        <ngb-timepicker class="d-inline-block" [spinners]="false" [ngModel]="{hour: 20, minute: 0}"></ngb-timepicker>
+        every day
+      </span>
+    </div>
+    <div class="col-auto">
+      <button ngbButton
+              class="btn btn-primary">
+        Update
+      </button>
+    </div>
   </div>
 </ng-template>
 

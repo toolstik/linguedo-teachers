@@ -21,6 +21,7 @@ export class TeacherComponent implements OnInit {
   }
 
   ngOnInit() {
+    localStorage.setItem('teacher_test', 'test value');
     this.teachers$ = this.teacherService.getAll();
     this.lessons$ = this.lessonService.getAll();
   }
