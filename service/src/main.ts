@@ -20,13 +20,19 @@ function doGet(e) {
 
 function execute(e) {
     const request: Request = JSON.parse(e.parameter.request);
+    return new Resources().processRequest(request);
+}
 
-    if (!request || !request.method)
-        return {
-            name: 'linguedo-teachers-service',
-            date: new Date()
-        };
+function roleCheck(roles: string[]) {
+    if (roles && roles.length) {
+        const currentUser = AuthService.getCurrentUser();
+        const currentRole = currentUser ? currentUser.role : null;
 
-    const resources = new Resources();
-    return resources[request.method](request.body);
+console.log(roles);
+console.log(currentUser);
+console.log(currentRole);
+
+        if (!roles.some(r => r == currentRole))
+            throw new ServiceError('forbidden', 'You do not have enough permissions to perform that action');
+    }
 }

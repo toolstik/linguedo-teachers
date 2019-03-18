@@ -1,18 +1,15 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-        "lib": [
-            "es2015",
-            "es5",
-            "es6",
-            "es2017"
-        ],
-        "strict": false,
-        "inlineSourceMap": true,
-        "experimentalDecorators": true
-    },
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
-  }
+  "compilerOptions": {
+    "target": "es2017",
+    "lib": [
+      "es2017"
+    ],
+    "strict": false,
+    "inlineSourceMap": true,
+    "experimentalDecorators": false
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

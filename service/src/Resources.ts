@@ -1,7 +1,19 @@
 class Resources {
 
-    login(requestBody: { token: string }) {
-        return new AuthService().login(requestBody.token);
+    processRequest(request: Request) {
+        if (!request || !request.method)
+            return {
+                name: 'linguedo-teachers-service',
+                date: new Date()
+            };
+
+        AuthService.authenticate(request.token);
+
+        return this[request.method](request.body);
+    }
+
+    login() {
+        return AuthService.getCurrentUser();
     }
 
     getAllTeachers() {
@@ -13,6 +25,7 @@ class Resources {
     }
 
     getAllClients() {
+        roleCheck(['teacher']);
         return new Model().client.findAll();
     }
 

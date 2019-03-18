@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
-import {BehaviorSubject, ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import {UserDto} from "../_transfer/UserDto";
 import {map} from "rxjs/operators";
 
@@ -12,15 +12,15 @@ export class AuthService {
   private currentUser$ = new ReplaySubject<UserDto>(1);
 
   constructor(private jsonp: MyJsonpService) {
-    const fromStorage = this.getCurrentUser();
+    const fromStorage = AuthService.getCurrentUser();
     this.currentUser$.next(fromStorage);
   }
 
-  private setCurrentUser(user: UserDto) {
+  private static setCurrentUser(user: UserDto) {
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
-  private getCurrentUser() {
+  static getCurrentUser() {
     const storageValue = localStorage.getItem('currentUser');
 
     if (!storageValue)
@@ -29,14 +29,14 @@ export class AuthService {
     return JSON.parse(storageValue) as UserDto;
   }
 
-  currentUser(){
+  currentUser() {
     return this.currentUser$.asObservable();
   }
 
   login(token: string) {
     this.jsonp.exec('login', {token: token})
       .pipe(map(i => {
-        this.setCurrentUser(i);
+        AuthService.setCurrentUser(i);
         return i;
       }))
       .subscribe(this.currentUser$);
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   logout() {
-    this.setCurrentUser(null);
+    AuthService.setCurrentUser(null);
     this.currentUser$.next(null);
   }
 }
