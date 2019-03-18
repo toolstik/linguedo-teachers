@@ -127,25 +127,20 @@
   <div class="row align-items-center mb-4">
     <div class="col-auto">
       <span class="h6 mr-3">Client:</span>
-      <div ngbDropdown class="d-inline-block">
+      <div ngbDropdown *ngIf="(clients$ | async) as clients; else loading" class="d-inline-block">
         <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-          <button class="dropdown-item">Client 1</button>
-          <button class="dropdown-item">Client 2</button>
-          <button class="dropdown-item">Client 3</button>
+          <button *ngFor="let client of clients" class="dropdown-item">{{client.name}}</button>
         </div>
       </div>
     </div>
 
     <div class="col-auto">
       <span class="h6 mr-3">Class type:</span>
-      <div ngbDropdown class="d-inline-block">
+      <div ngbDropdown *ngIf="(classTypes$ | async) as classTypes; else loading" class="d-inline-block">
         <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>Select class type</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-          <button class="dropdown-item">Normal lesson 90 Min</button>
-          <button class="dropdown-item">Normal lesson 60 Min</button>
-          <button class="dropdown-item">Tutoring lesson 60 Min</button>
-          <button class="dropdown-item">Conversation class 60 Min</button>
+          <button *ngFor="let classType of classTypes" class="dropdown-item">{{classType.name}}</button>
         </div>
       </div>
     </div>

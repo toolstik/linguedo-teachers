@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
-import {TeacherDto} from "../_transfer/TeacherDto";
+import {ClientDto} from "../_transfer/ClientDto";
 
 @Injectable({
   providedIn: 'root'
 })
-export class TeacherService {
+export class ClientService {
 
   constructor(private jsonp: MyJsonpService) {
   }
 
   getAll() {
-    return this.jsonp.exec<TeacherDto>('getAllTeachers');
+    return this.jsonp.exec<ClientDto>('getAllClients');
   }
 }

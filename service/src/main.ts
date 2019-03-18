@@ -26,16 +26,27 @@ class Model {
         const spreadsheet = SpreadsheetApp.openById('1W3fLlLxMWJJFa4qZ8iJ4JMkYtUKem2VWknlIm6-UKcg');
 
         this.model = new EntitySession({
-            entities: {
-                teacher: {
-                    sheet: spreadsheet.getSheetByName("teacher")
-                }
+            defaults: {
+                spreadsheet: spreadsheet,
+                rangeScanLazy: true
             }
         });
     }
 
     get teacher() {
         return this.model.getRepository('teacher');
+    }
+
+    get student() {
+        return this.model.getRepository('student');
+    }
+
+    get classType() {
+        return this.model.getRepository('class_type');
+    }
+
+    get client() {
+        return this.model.getRepository('client');
     }
 }
 
@@ -82,6 +93,14 @@ class Resources {
 
     getAllTeachers() {
         return new Model().teacher.findAll();
+    }
+
+    getAllClassTypes() {
+        return new Model().classType.findAll();
+    }
+
+    getAllClients() {
+        return new Model().client.findAll();
     }
 
     getAllLessons() {
