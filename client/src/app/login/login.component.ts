@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
     if (this.token)
       this.authService.login(this.token).subscribe(
         () => {
+          this.error$.next(null);
         },
         error => {
           this.error$.next(error.message);

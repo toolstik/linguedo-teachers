@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {switchMap} from "rxjs/operators";
+import {mergeMap} from "rxjs/operators";
 import {Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {AuthService} from "./auth.service";
@@ -37,7 +37,7 @@ export class MyJsonpService {
       .set('request', JSON.stringify(request));
 
     return this.http.jsonp<response>(`${this.url}?${httpParams.toString()}`, 'callback')
-      .pipe(switchMap(resp => {
+      .pipe(mergeMap(resp => {
         if (resp.success) {
           return Observable.create(observer => {
             observer.next(resp.body);

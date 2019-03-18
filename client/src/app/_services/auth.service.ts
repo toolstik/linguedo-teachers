@@ -9,11 +9,12 @@ import {map} from "rxjs/operators";
 })
 export class AuthService {
 
-  private currentUser$ = new ReplaySubject<UserDto>(1);
+  private currentUserSubj = new ReplaySubject<UserDto>(1);
+  private currentUser$ = this.currentUserSubj.asObservable();
 
   constructor(private jsonp: MyJsonpService) {
     const fromStorage = AuthService.getCurrentUser();
-    this.currentUser$.next(fromStorage);
+    this.currentUserSubj.next(fromStorage);
   }
 
   private static setCurrentUser(user: UserDto) {
@@ -30,22 +31,20 @@ export class AuthService {
   }
 
   currentUser() {
-    return this.currentUser$.asObservable();
+    return this.currentUserSubj.asObservable();
   }
 
   login(token: string) {
-    this.jsonp.exec('login', {token: token})
+    return this.jsonp.exec('login', {token: token})
       .pipe(map(i => {
         AuthService.setCurrentUser(i);
+        this.currentUserSubj.next(i);
         return i;
-      }))
-      .subscribe(this.currentUser$);
-
-    return this.currentUser$.asObservable();
+      }));
   }
 
   logout() {
     AuthService.setCurrentUser(null);
-    this.currentUser$.next(null);
+    this.currentUserSubj.next(null);
   }
 }

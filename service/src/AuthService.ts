@@ -2,18 +2,25 @@ class AuthService {
 
     private static currentUser: UserEntity;
 
-    static authenticate(token: string) {
-        if (!token)
-            throw new ServiceError('forbidden', 'Access token is not specified');
+    static auth(token: string) {
+        AuthService.currentUser = AuthService.getUserByToken(token);
+    }
 
-        const user = new Model().user.findOne({ token: token });
+    static login(token: string) {
+        const user = AuthService.getUserByToken(token);
 
         if (!user)
             throw new ServiceError('forbidden', 'Access token is invalid or expired');
 
-        AuthService.currentUser = user as UserEntity;
-
         return user;
+    }
+
+    private static getUserByToken(token: string) {
+        if (!token)
+            return null;
+
+        const user = new Model().user.findOne({ token: token });
+        return user as UserEntity;
     }
 
     static getCurrentUser() {

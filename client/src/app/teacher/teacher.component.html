@@ -6,15 +6,20 @@
           <ng-template ngbTabTitle>Classes</ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
-              <div class="col-xl">
-                <ng-container *ngIf="selectedLesson; then classView else calendar">
+              <div [ngClass]="{'col-7':!!selectedLesson, 'col-auto':!selectedLesson}">
+                <ng-container *ngTemplateOutlet="calendar">
+                </ng-container>
+              </div>
+              <div *ngIf="selectedLesson" class="col-5">
+                <ng-container *ngTemplateOutlet="classView">
                 </ng-container>
               </div>
             </div>
           </ng-template>
         </ngb-tab>
         <ngb-tab>
-          <ng-template ngbTabTitle>Substitution proposals <span class="badge badge-primary">2</span></ng-template>
+          <ng-template ngbTabTitle>Substitution requests by other teachers <span class="badge badge-primary">2</span>
+          </ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
               <div class="col-xl">
@@ -24,7 +29,7 @@
           </ng-template>
         </ngb-tab>
         <ngb-tab>
-          <ng-template ngbTabTitle>Substitution requests <span class="badge badge-primary">1</span></ng-template>
+          <ng-template ngbTabTitle>My requested substitutions <span class="badge badge-primary">1</span></ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
               <div class="col-xl">
@@ -158,24 +163,28 @@
 
   </div>
 
-  <div class="row justify-content-center mb-1" *ngIf="(teachers$ | async) as teachers; else loading">
-    <div class="col-6">
+  <div class="row justify-content-center mb-1" *ngIf="(students$ | async) as students; else loading">
+    <div class="col">
       <table class="table table-striped">
         <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">Present in class</th>
           <th scope="col">Student</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let teacher of teachers; index as i">
+        <tr *ngFor="let student of students; index as i">
           <!--<th scope="row">{{ i + 1 }}</th>-->
-          <td>
+          <td style="text-align: center">
             <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
-            <myCheckbox [ngModel]="true"></myCheckbox>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="true">
+              <label class="custom-control-label" for="student{{i}}"></label>
+            </div>
+            <!--<myCheckbox [ngModel]="true"></myCheckbox>-->
           </td>
           <td>
-            {{teacher.firstName}} {{teacher.lastName}}
+            {{student.firstName}} {{student.lastName}}
           </td>
         </tr>
         </tbody>

@@ -7,13 +7,13 @@ class Resources {
                 date: new Date()
             };
 
-        AuthService.authenticate(request.token);
+        AuthService.auth(request.token);
 
         return this[request.method](request.body);
     }
 
-    login() {
-        return AuthService.getCurrentUser();
+    login(data: { token: string }) {
+        return AuthService.login(data.token);
     }
 
     getAllTeachers() {
@@ -31,6 +31,10 @@ class Resources {
 
     getAllLessons() {
         return new CalendarService().getAll();
+    }
+
+    getAllStudents() {
+        return new Model().student.findAll();
     }
 
 }

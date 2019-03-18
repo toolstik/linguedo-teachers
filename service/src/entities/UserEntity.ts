@@ -1,4 +1,4 @@
-class UserEntity extends Entity {
+class UserEntity {
   email: string;
   token: string;
   role: string;

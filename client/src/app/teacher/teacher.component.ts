@@ -10,6 +10,8 @@ import {ClientService} from "../_services/client.service";
 import {ClientDto} from "../_transfer/ClientDto";
 import {AuthService} from "../_services/auth.service";
 import {UserDto} from "../_transfer/UserDto";
+import {StudentService} from "../_services/student.service";
+import {StudentDto} from "../_transfer/StudentDto";
 
 @Component({
   selector: 'app-teacher',
@@ -19,6 +21,7 @@ import {UserDto} from "../_transfer/UserDto";
 export class TeacherComponent implements OnInit {
 
   teachers$: Observable<TeacherDto[]>;
+  students$: Observable<StudentDto[]>;
   classTypes$: Observable<ClassTypeDto[]>;
   clients$: Observable<ClientDto[]>;
   lessons$: Observable<any>;
@@ -28,6 +31,7 @@ export class TeacherComponent implements OnInit {
   selectedLesson: EventObject;
 
   constructor(private teacherService: TeacherService,
+              private studentService: StudentService,
               private authService: AuthService,
               private classTypeService: ClassTypeService,
               private clientService: ClientService,
@@ -36,6 +40,7 @@ export class TeacherComponent implements OnInit {
 
   ngOnInit() {
     this.teachers$ = this.teacherService.getAll();
+    this.students$ = this.studentService.getAll();
     this.classTypes$ = this.classTypeService.getAll();
     this.clients$ = this.clientService.getAll();
     this.lessons$ = this.lessonService.getAll();
