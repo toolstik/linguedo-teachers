@@ -10,13 +10,15 @@ import {TeacherComponent} from './teacher/teacher.component';
 import {HttpClientJsonpModule, HttpClientModule} from "@angular/common/http";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { CheckboxComponent } from './common/checkbox/checkbox.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
     TeacherComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

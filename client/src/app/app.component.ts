@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Observable} from "rxjs";
+import {UserDto} from "./_transfer/UserDto";
+import {AuthService} from "./_services/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'client';
+
+  currentUser$: Observable<UserDto>;
+
+  constructor(private authService: AuthService) {
+    this.currentUser$ = authService.currentUser();
+  }
+
+  logout(){
+    this.authService.logout();
+  }
 }

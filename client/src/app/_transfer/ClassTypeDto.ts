@@ -1,5 +1,5 @@
 export class ClassTypeDto {
-  id: number;
+  id: string;
   name: string;
   duration: number;
 }
