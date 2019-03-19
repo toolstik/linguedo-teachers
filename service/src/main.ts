@@ -28,11 +28,45 @@ function roleCheck(roles: string[]) {
         const currentUser = AuthService.getCurrentUser();
         const currentRole = currentUser ? currentUser.role : null;
 
-console.log(roles);
-console.log(currentUser);
-console.log(currentRole);
-
         if (!roles.some(r => r == currentRole))
             throw new ServiceError('forbidden', 'You do not have enough permissions to perform that action');
+    }
+}
+
+function preAuthorize(roles: string[]) {
+    return function (target: Object, key: string) {
+
+        // save a reference to the original method this way we keep the values currently in the
+        // descriptor and don't overwrite what another decorator might have done to the descriptor.
+        const descriptor = Object.getOwnPropertyDescriptor(target, key);
+
+        var originalMethod = descriptor.value;
+
+        //editing the descriptor/value parameter
+        descriptor.value = function () {
+            roleCheck(roles);
+            // note usage of originalMethod here
+            var result = originalMethod.apply(this, arguments);
+            return result;
+        };
+
+        // bug fix
+        Object.defineProperty(target, key, descriptor);
+
+        // return edited descriptor as opposed to overwriting the descriptor
+        return descriptor;
+    }
+}
+
+function requestMappingClass(name?: string) {
+    return function (target: any) {
+        Resources.setResource(target, name);
+        return target;
+    }
+}
+
+function requestMappingMethod(name?: string) {
+    return function (target: any, key: string) {
+        Resources.setMethod(target, key, name)
     }
 }

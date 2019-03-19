@@ -6,7 +6,8 @@
     ],
     "strict": false,
     "inlineSourceMap": true,
-    "experimentalDecorators": false
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "exclude": [
     "node_modules",

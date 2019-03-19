@@ -1,5 +1,7 @@
 class Model {
+    
     private model: EntitySession;
+
     constructor() {
         const spreadsheet = SpreadsheetApp.openById('1W3fLlLxMWJJFa4qZ8iJ4JMkYtUKem2VWknlIm6-UKcg');
         this.model = new EntitySession({
