@@ -8,13 +8,15 @@ import {StudentDto} from "../_transfer/StudentDto";
 })
 export class StudentService {
 
+  private resource = 'student';
+
   constructor(private jsonp: MyJsonpService) {
   }
 
   getAll() {
     const subj = new ReplaySubject<StudentDto[]>(1);
 
-    this.jsonp.exec('getAllStudents')
+    this.jsonp.exec(this.resource, 'list')
       .subscribe(subj);
 
     return subj.asObservable();

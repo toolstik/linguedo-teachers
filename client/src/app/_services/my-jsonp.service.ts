@@ -26,9 +26,10 @@ export class MyJsonpService {
     return user ? user.token : null;
   }
 
-  exec<T = any>(method: string, body?: any): Observable<T> {
+  exec<T = any>(resource: string, method: string, body?: any): Observable<T> {
     const request = {
       token: this.getToken(),
+      resource: resource,
       method: method,
       body: body
     };

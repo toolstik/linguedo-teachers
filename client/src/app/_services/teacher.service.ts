@@ -8,13 +8,15 @@ import {ReplaySubject} from "rxjs";
 })
 export class TeacherService {
 
+  private resource = 'teacher';
+
   constructor(private jsonp: MyJsonpService) {
   }
 
   getAll() {
     const subj = new ReplaySubject<TeacherDto[]>(1);
 
-    this.jsonp.exec('getAllTeachers')
+    this.jsonp.exec(this.resource, 'list')
       .subscribe(subj);
 
     return subj.asObservable();

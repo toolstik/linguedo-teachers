@@ -9,8 +9,9 @@ import {map} from "rxjs/operators";
 })
 export class AuthService {
 
+  private resource = 'auth';
+
   private currentUserSubj = new ReplaySubject<UserDto>(1);
-  private currentUser$ = this.currentUserSubj.asObservable();
 
   constructor(private jsonp: MyJsonpService) {
     const fromStorage = AuthService.getCurrentUser();
@@ -35,7 +36,7 @@ export class AuthService {
   }
 
   login(token: string) {
-    return this.jsonp.exec('login', {token: token})
+    return this.jsonp.exec(this.resource, 'login', {token: token})
       .pipe(map(i => {
         AuthService.setCurrentUser(i);
         this.currentUserSubj.next(i);

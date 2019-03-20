@@ -23,14 +23,29 @@ class Resources {
 
     private static getMethod(resourceName: string, methodName: string) {
         const res = Resources.resources[resourceName];
+
+        if (!res)
+            throw new ServiceError(
+                'invalid',
+                `Resource '${resourceName}' is not found`,
+                { user: getCurrentUserName }
+            );
+
         const method = Resources.methods[res.class][methodName];
+
+        if (!method)
+            throw new ServiceError(
+                'invalid',
+                `Method '${methodName}' is not found in resource '${resourceName}'`,
+                { user: getCurrentUserName }
+            );
 
         const resourceInstance = new res.proto();
 
         return resourceInstance[method];
     }
 
-    processRequest(request: Request) {
+    static processRequest(request: Request) {
         if (!request || !request.method)
             return {
                 name: 'linguedo-teachers-service',
@@ -39,44 +54,16 @@ class Resources {
 
         AuthService.auth(request.token);
 
-        const method = Resources.getMethod('myResource', request.method);
+        const method = Resources.getMethod(request.resource, request.method);
 
-        return method(request.body);
+        const start = new Date().getTime();
+        const result = method(request.body);
+        const end = new Date().getTime();
+
+        console.log(`Method '${request.method}' of resource '${request.resource}' has been executed by '${getCurrentUserName()}' in ${end - start}ms`);
+
+        return result;
     }
 }
 
-@requestMappingClass('myResource')
-class MyResource {
 
-
-    @requestMappingMethod()
-    login(data: { token: string }) {
-        return AuthService.login(data.token);
-    }
-
-    @requestMappingMethod()
-    getAllTeachers() {
-        return new Model().teacher.findAll();
-    }
-
-    @requestMappingMethod()
-    getAllClassTypes() {
-        return new Model().classType.findAll();
-    }
-
-    @requestMappingMethod()
-    getAllClients() {
-        // roleCheck(['teacher']);
-        return new Model().client.findAll();
-    }
-
-    @requestMappingMethod()
-    getAllLessons() {
-        return new CalendarService().getAll();
-    }
-
-    @requestMappingMethod()
-    getAllStudents() {
-        return new Model().student.findAll();
-    }
-}

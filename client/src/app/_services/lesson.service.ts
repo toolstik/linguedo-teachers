@@ -7,13 +7,16 @@ import {ReplaySubject} from "rxjs";
 })
 export class LessonService {
 
+  private resource = 'calendar';
+
+
   constructor(private jsonp: MyJsonpService) {
   }
 
   getAll() {
     const subj = new ReplaySubject(1);
 
-    this.jsonp.exec('getAllLessons')
+    this.jsonp.exec(this.resource, 'list')
       .subscribe(subj);
 
     return subj.asObservable();

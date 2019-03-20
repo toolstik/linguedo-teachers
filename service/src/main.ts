@@ -7,11 +7,17 @@ function doGet(e) {
             body: result
         }
     }
-    catch (e) {
+    catch (error) {
         responce = {
             success: false,
-            error: e
-        }
+            error: error
+        };
+
+        console.error({
+            user: getCurrentUserName(),
+            error: error,
+            parameters: e.parameter
+        });
     }
     const resultString = JSON.stringify(responce);
     return ContentService.createTextOutput(e.parameter.callback + "(" + resultString + ");")
@@ -20,7 +26,7 @@ function doGet(e) {
 
 function execute(e) {
     const request: Request = JSON.parse(e.parameter.request);
-    return new Resources().processRequest(request);
+    return Resources.processRequest(request);
 }
 
 function roleCheck(roles: string[]) {
@@ -31,6 +37,15 @@ function roleCheck(roles: string[]) {
         if (!roles.some(r => r == currentRole))
             throw new ServiceError('forbidden', 'You do not have enough permissions to perform that action');
     }
+}
+
+function getCurrentUserName() {
+    const user = AuthService.getCurrentUser();
+
+    if (!user)
+        return 'anonimous';
+
+    return user.email;
 }
 
 function preAuthorize(roles: string[]) {
@@ -58,15 +73,18 @@ function preAuthorize(roles: string[]) {
     }
 }
 
-function requestMappingClass(name?: string) {
-    return function (target: any) {
-        Resources.setResource(target, name);
-        return target;
-    }
-}
 
-function requestMappingMethod(name?: string) {
-    return function (target: any, key: string) {
-        Resources.setMethod(target, key, name)
+
+function requestMapping(name?: string) {
+    return function (target: any, key?: string) {
+        if (!key) {
+            // class
+            Resources.setResource(target, name);
+            return target;
+        }
+        else {
+            // method
+            Resources.setMethod(target, key, name)
+        }
     }
 }
