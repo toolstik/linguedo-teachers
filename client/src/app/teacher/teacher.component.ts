@@ -28,7 +28,7 @@ export class TeacherComponent implements OnInit {
 
   currentUser$: Observable<UserDto>;
 
-  selectedLesson: EventObject;
+  editableLesson: EventObject;
 
   constructor(private teacherService: TeacherService,
               private studentService: StudentService,
@@ -48,14 +48,19 @@ export class TeacherComponent implements OnInit {
   }
 
   eventSelected(event: EventObject) {
-    this.selectedLesson = event;
+    this.editableLesson = event;
   }
 
   saveClass() {
-    this.selectedLesson = null;
+    this.editableLesson = null;
   }
 
   cancelSaveClass() {
-    this.selectedLesson = null;
+    this.editableLesson = null;
+  }
+
+  calendarSelect(event: { start: Date, end: Date }) {
+    this.editableLesson = {} as EventObject;
+    this.editableLesson.start = event.start;
   }
 }

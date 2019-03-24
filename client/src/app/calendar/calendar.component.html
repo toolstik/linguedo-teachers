@@ -3,6 +3,7 @@
                    [options]="calendarOptions"
                    [eventsModel]="events"
                    (eventClick)="eventClick($event.detail.event)"
+                   (select)="onSelect.next($event)"
   ></ng-fullcalendar>
 
   <!--(eventDrop)="updateEvent($event.detail)"-->

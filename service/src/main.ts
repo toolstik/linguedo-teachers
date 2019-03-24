@@ -29,16 +29,6 @@ function execute(e) {
     return Resources.processRequest(request);
 }
 
-function roleCheck(roles: string[]) {
-    if (roles && roles.length) {
-        const currentUser = AuthService.getCurrentUser();
-        const currentRole = currentUser ? currentUser.role : null;
-
-        if (!roles.some(r => r == currentRole))
-            throw new ServiceError('forbidden', 'You do not have enough permissions to perform that action');
-    }
-}
-
 function getCurrentUserName() {
     const user = AuthService.getCurrentUser();
 
@@ -57,6 +47,16 @@ function preAuthorize(roles: string[]) {
 
         var originalMethod = descriptor.value;
 
+        function roleCheck(roles: string[]) {
+            if (roles && roles.length) {
+                const currentUser = AuthService.getCurrentUser();
+                const currentRole = currentUser ? currentUser.role : null;
+
+                if (!roles.some(r => r == currentRole))
+                    throw new ServiceError('forbidden', 'You do not have enough permissions to perform that action');
+            }
+        }
+
         //editing the descriptor/value parameter
         descriptor.value = function () {
             roleCheck(roles);
@@ -72,7 +72,6 @@ function preAuthorize(roles: string[]) {
         return descriptor;
     }
 }
-
 
 
 function requestMapping(name?: string) {

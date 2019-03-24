@@ -16,6 +16,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   @Input() events: any[];
   @Output() eventSelected = new EventEmitter<EventObject>();
+  @Output() onSelect = new EventEmitter<any>();
 
   constructor() {
 
@@ -25,6 +26,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.calendarOptions = {
       editable: false,
       eventLimit: false,
+      selectable: true,
       height: () => window.innerHeight * 0.8, // todo crap
       weekNumberCalculation: 'ISO',
       businessHours: {
@@ -49,5 +51,4 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   eventClick(e: EventObject) {
     this.eventSelected.next(e);
   }
-
 }

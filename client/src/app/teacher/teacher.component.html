@@ -6,11 +6,11 @@
           <ng-template ngbTabTitle>Classes</ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
-              <div [ngClass]="{'col-7':!!selectedLesson, 'col-auto':!selectedLesson}">
+              <div [ngClass]="{'col-7':!!editableLesson, 'col-auto':!editableLesson}">
                 <ng-container *ngTemplateOutlet="calendar">
                 </ng-container>
               </div>
-              <div *ngIf="selectedLesson" class="col-5">
+              <div *ngIf="editableLesson" class="col-5">
                 <ng-container *ngTemplateOutlet="classView">
                 </ng-container>
               </div>
@@ -48,7 +48,7 @@
             </div>
           </ng-template>
         </ngb-tab>
-        <ngb-tab>
+        <ngb-tab *ngIf="false">
           <ng-template ngbTabTitle>Availability settings</ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
@@ -73,7 +73,10 @@
 
 <ng-template #calendar>
   <ng-container *ngIf="(lessons$ | async) as lessons; else loading">
-    <app-calendar [events]="lessons" (eventSelected)="eventSelected($event)">Loading...
+    <app-calendar [events]="lessons"
+                  (eventSelected)="eventSelected($event)"
+                  (onSelect)="calendarSelect($event)"
+    >Loading...
     </app-calendar>
   </ng-container>
 </ng-template>
@@ -89,7 +92,7 @@
 <ng-template #classView>
   <div class="row mb-4 justify-content-between">
     <div class="col-auto">
-      <p class="h4">{{selectedLesson.title}} *and some other info*</p>
+      <p class="h4">{{editableLesson.title}} *and some other info*</p>
     </div>
     <div class="col-auto">
       <div class="btn-group" role="group">
@@ -152,12 +155,12 @@
 
     <div class="col-auto">
       <span class="h6 mr-3">From:</span>
-      <ngb-timepicker class="d-inline-block" [spinners]="false" [ngModel]="{hour: 13, minute: 30}"></ngb-timepicker>
+      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.start"></myTimePicker>
     </div>
 
     <div class="col-auto">
       <span class="h6 mr-3">To:</span>
-      <ngb-timepicker class="d-inline-block" [spinners]="false" [ngModel]="{hour: 14, minute: 30}"></ngb-timepicker>
+      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.end"></myTimePicker>
     </div>
 
 
