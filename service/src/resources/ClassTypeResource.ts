@@ -1,3 +1,6 @@
+import { Model } from "../Model";
+import { requestMapping } from "../main";
+
 @requestMapping('classType')
 class ClassTypeResource {
 

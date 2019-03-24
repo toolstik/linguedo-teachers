@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
-import {TeacherDto} from "../_transfer/TeacherDto";
+import {TeacherDto} from "../../../../shared/transfer/TeacherDto";
 import {ReplaySubject} from "rxjs";
 
 @Injectable({

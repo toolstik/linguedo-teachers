@@ -9,6 +9,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
+  "include":[
+    "../shared/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist"

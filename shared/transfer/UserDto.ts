@@ -1,5 +1,6 @@
 export class UserDto {
-  email: string;
+  id: string;
   token: string;
   role: string;
 }
+

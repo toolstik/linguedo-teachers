@@ -16,7 +16,7 @@ import {Moment, isMoment} from "moment";
 export class TimepickerComponent implements ControlValueAccessor {
 
   private dateValue: Date | Moment;
-  timeValue : NgbTimeStruct;
+  timeValue: NgbTimeStruct;
 
   private onChangeCallback: (_: any) => void = (() => {
   });
@@ -50,8 +50,6 @@ export class TimepickerComponent implements ControlValueAccessor {
     if (!this.dateValue)
       return;
 
-    console.log(time);
-
     if (this.dateValue instanceof Date)
       this.dateValue.setHours(time.hour, time.minute, time.second || 0, 0);
     else if (isMoment(this.dateValue)) {
@@ -69,7 +67,10 @@ export class TimepickerComponent implements ControlValueAccessor {
   }
 
   writeValue(obj: Date | Moment): void {
-    this.dateValue = obj;
+    if (typeof obj == 'string' || typeof obj == 'number')
+      this.dateValue = new Date(obj);
+    else
+      this.dateValue = obj;
     this.timeValue = this.getTime();
   }
 

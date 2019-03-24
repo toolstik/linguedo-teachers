@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Observable} from "rxjs";
-import {UserDto} from "./_transfer/UserDto";
+import {UserDto} from "../../../shared/transfer/UserDto";
 import {AuthService} from "./_services/auth.service";
 
 @Component({

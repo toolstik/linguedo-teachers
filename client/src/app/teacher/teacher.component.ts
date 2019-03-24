@@ -3,15 +3,17 @@ import {TeacherService} from "../_services/teacher.service";
 import {Observable} from "rxjs";
 import {LessonService} from "../_services/lesson.service";
 import {EventObject} from "fullcalendar";
-import {TeacherDto} from "../_transfer/TeacherDto";
+import {TeacherDto} from "../../../../shared/transfer/TeacherDto";
 import {ClassTypeService} from "../_services/class-type.service";
-import {ClassTypeDto} from "../_transfer/ClassTypeDto";
+import {ClassTypeDto} from "../../../../shared/transfer/ClassTypeDto";
 import {ClientService} from "../_services/client.service";
-import {ClientDto} from "../_transfer/ClientDto";
+import {ClientDto} from "../../../../shared/transfer/ClientDto";
 import {AuthService} from "../_services/auth.service";
-import {UserDto} from "../_transfer/UserDto";
+import {UserDto} from "../../../../shared/transfer/UserDto";
 import {StudentService} from "../_services/student.service";
-import {StudentDto} from "../_transfer/StudentDto";
+import {StudentDto} from "../../../../shared/transfer/StudentDto";
+import {LessonDto} from "../../../../shared/transfer/LessonDto";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-teacher',
@@ -24,11 +26,13 @@ export class TeacherComponent implements OnInit {
   students$: Observable<StudentDto[]>;
   classTypes$: Observable<ClassTypeDto[]>;
   clients$: Observable<ClientDto[]>;
-  lessons$: Observable<any>;
+
+  lessons: LessonDto[];
+  events: EventObject[];
 
   currentUser$: Observable<UserDto>;
 
-  editableLesson: EventObject;
+  editableLesson: LessonDto;
 
   constructor(private teacherService: TeacherService,
               private studentService: StudentService,
@@ -43,12 +47,30 @@ export class TeacherComponent implements OnInit {
     this.students$ = this.studentService.getAll();
     this.classTypes$ = this.classTypeService.getAll();
     this.clients$ = this.clientService.getAll();
-    this.lessons$ = this.lessonService.getAll();
     this.currentUser$ = this.authService.currentUser();
+
+    this.lessonService.getByCurrentTeacher().subscribe(data => {
+      this.lessons = data;
+
+      this.events = data.map((l, i) => {
+        return {
+          id: i,
+          title: `${l.teacher.firstName} ${l.teacher.lastName} ${l.classType.id}`,
+          description: '',
+          start: l.startTime,
+          end: l.endTime,
+
+        }
+      })
+    });
+  }
+
+  private clone<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
   }
 
   eventSelected(event: EventObject) {
-    this.editableLesson = event;
+    this.editableLesson = this.clone(this.lessons[event.id]);
   }
 
   saveClass() {
@@ -60,7 +82,7 @@ export class TeacherComponent implements OnInit {
   }
 
   calendarSelect(event: { start: Date, end: Date }) {
-    this.editableLesson = {} as EventObject;
-    this.editableLesson.start = event.start;
+    // this.editableLesson = {} as EventObject;
+    // this.editableLesson.start = event.start;
   }
 }

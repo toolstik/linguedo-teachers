@@ -50,7 +50,10 @@ module.exports = function (grunt) {
                     '<%= grunt.template.today("yyyy-mm-dd HH:MM:ss") %> */\n',
             },
             service: {
-                src: 'service/src/**/*.ts',
+                src: [
+                    'shared/**/*.ts',
+                    'service/src/**/*.ts'
+                ],
                 dest: 'service/dist/main.ts'
             },
         },

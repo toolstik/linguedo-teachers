@@ -1,3 +1,6 @@
+import { AuthService } from "./services/AuthService";
+import { Resources } from "./Resources";
+
 function doGet(e) {
     let responce: Responce;
     try {
@@ -29,16 +32,16 @@ function execute(e) {
     return Resources.processRequest(request);
 }
 
-function getCurrentUserName() {
+export function getCurrentUserName() {
     const user = AuthService.getCurrentUser();
 
     if (!user)
         return 'anonimous';
 
-    return user.email;
+    return user.id;
 }
 
-function preAuthorize(roles: string[]) {
+export function preAuthorize(roles: string[]) {
     return function (target: Object, key: string) {
 
         // save a reference to the original method this way we keep the values currently in the
@@ -52,8 +55,17 @@ function preAuthorize(roles: string[]) {
                 const currentUser = AuthService.getCurrentUser();
                 const currentRole = currentUser ? currentUser.role : null;
 
-                if (!roles.some(r => r == currentRole))
-                    throw new ServiceError('forbidden', 'You do not have enough permissions to perform that action');
+                if (!roles.some(r => r == currentRole)) {
+                    throw new ServiceError(
+                        'forbidden',
+                        'You do not have enough permissions to perform that action',
+                        {
+                            actualRole: currentRole,
+                            requiredRoles: roles,
+                            request: Resources.getCurrentRequest()
+                        }
+                    );
+                }
             }
         }
 
@@ -74,7 +86,7 @@ function preAuthorize(roles: string[]) {
 }
 
 
-function requestMapping(name?: string) {
+export function requestMapping(name?: string) {
     return function (target: any, key?: string) {
         if (!key) {
             // class

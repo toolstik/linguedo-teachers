@@ -1,6 +1,9 @@
-class AuthService {
+import { UserDto } from './../../../shared/transfer/UserDto';
+import { Model } from '../Model';
 
-    private static currentUser: UserEntity;
+export class AuthService {
+
+    private static currentUser: UserDto;
 
     static auth(token: string) {
         AuthService.currentUser = AuthService.getUserByToken(token);
@@ -20,7 +23,7 @@ class AuthService {
             return null;
 
         const user = new Model().user.findOne({ token: token });
-        return user as UserEntity;
+        return user as UserDto;
     }
 
     static getCurrentUser() {

@@ -1,3 +1,6 @@
+import { AuthService } from "../services/AuthService";
+import { requestMapping } from "../main";
+
 @requestMapping('auth')
 class AuthResource {
 

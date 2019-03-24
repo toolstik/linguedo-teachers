@@ -1,7 +1,12 @@
-class Resources {
+import { AuthService } from "./services/AuthService";
+import { getCurrentUserName } from "./main";
+
+export class Resources {
 
     private static resources: any = {};
     private static methods: any = {};
+
+    private static currentRequest: Request;
 
     static setResource(constructor: Function, name?: string) {
 
@@ -28,7 +33,7 @@ class Resources {
             throw new ServiceError(
                 'invalid',
                 `Resource '${resourceName}' is not found`,
-                { user: getCurrentUserName }
+                { user: getCurrentUserName() }
             );
 
         const method = Resources.methods[res.class][methodName];
@@ -37,7 +42,7 @@ class Resources {
             throw new ServiceError(
                 'invalid',
                 `Method '${methodName}' is not found in resource '${resourceName}'`,
-                { user: getCurrentUserName }
+                { user: getCurrentUserName() }
             );
 
         const resourceInstance = new res.proto();
@@ -46,6 +51,8 @@ class Resources {
     }
 
     static processRequest(request: Request) {
+        Resources.currentRequest = request;
+
         if (!request || !request.method)
             return {
                 name: 'linguedo-teachers-service',
@@ -63,6 +70,10 @@ class Resources {
         console.log(`Method '${request.method}' of resource '${request.resource}' has been executed by '${getCurrentUserName()}' in ${end - start}ms`);
 
         return result;
+    }
+
+    static getCurrentRequest() {
+        return Resources.currentRequest;
     }
 }
 

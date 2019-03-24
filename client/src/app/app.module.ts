@@ -9,9 +9,9 @@ import {FullCalendarModule} from 'ng-fullcalendar';
 import {TeacherComponent} from './teacher/teacher.component';
 import {HttpClientJsonpModule, HttpClientModule} from "@angular/common/http";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import { CheckboxComponent } from './common/checkbox/checkbox.component';
-import { LoginComponent } from './login/login.component';
-import { TimepickerComponent } from './common/timepicker/timepicker.component';
+import {CheckboxComponent} from './common/checkbox/checkbox.component';
+import {LoginComponent} from './login/login.component';
+import {TimepickerComponent} from './common/timepicker/timepicker.component';
 
 @NgModule({
   declarations: [

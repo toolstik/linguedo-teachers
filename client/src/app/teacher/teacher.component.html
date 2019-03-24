@@ -72,8 +72,8 @@
 </ng-template>
 
 <ng-template #calendar>
-  <ng-container *ngIf="(lessons$ | async) as lessons; else loading">
-    <app-calendar [events]="lessons"
+  <ng-container *ngIf="events; else loading">
+    <app-calendar [events]="events"
                   (eventSelected)="eventSelected($event)"
                   (onSelect)="calendarSelect($event)"
     >Loading...
@@ -92,7 +92,7 @@
 <ng-template #classView>
   <div class="row mb-4 justify-content-between">
     <div class="col-auto">
-      <p class="h4">{{editableLesson.title}} *and some other info*</p>
+      <p class="h4">{{editableLesson.title}}</p>
     </div>
     <div class="col-auto">
       <div class="btn-group" role="group">
@@ -133,34 +133,40 @@
   </div>
 
   <div class="row align-items-center mb-4">
-    <div class="col-auto">
-      <span class="h6 mr-3">Client:</span>
-      <div ngbDropdown *ngIf="(clients$ | async) as clients; else loading" class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-          <button *ngFor="let client of clients" class="dropdown-item">{{client.name}}</button>
-        </div>
-      </div>
-    </div>
+    <!--<div class="col-auto">-->
+    <!--<span class="h6 mr-3">Client:</span>-->
+    <!--<div ngbDropdown *ngIf="(clients$ | async) as clients; else loading" class="d-inline-block">-->
+    <!--<button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>-->
+    <!--<div ngbDropdownMenu aria-labelledby="dropdownBasic2">-->
+    <!--<button *ngFor="let client of clients" class="dropdown-item">{{client.name}}</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
 
     <div class="col-auto">
       <span class="h6 mr-3">Class type:</span>
       <div ngbDropdown *ngIf="(classTypes$ | async) as classTypes; else loading" class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>Select class type</button>
+        <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>{{editableLesson?.classType?.name
+          || 'Select class type'}}
+        </button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-          <button *ngFor="let classType of classTypes" class="dropdown-item">{{classType.name}}</button>
+          <button *ngFor="let classType of classTypes"
+                  class="dropdown-item"
+                  (click)="editableLesson.classType = classType"
+          >{{classType.name}}
+          </button>
         </div>
       </div>
     </div>
 
     <div class="col-auto">
       <span class="h6 mr-3">From:</span>
-      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.start"></myTimePicker>
+      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.startTime"></myTimePicker>
     </div>
 
     <div class="col-auto">
       <span class="h6 mr-3">To:</span>
-      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.end"></myTimePicker>
+      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.endTime"></myTimePicker>
     </div>
 
 
@@ -176,7 +182,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let student of students; index as i">
+        <tr *ngFor="let student of editableLesson.students; index as i">
           <!--<th scope="row">{{ i + 1 }}</th>-->
           <td style="text-align: center">
             <!--<input type="checkbox" [ngModel]="true" ngbButton>-->

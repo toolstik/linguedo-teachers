@@ -1,24 +1,23 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
-import {ReplaySubject} from "rxjs";
+import {LessonDto} from "../../../../shared/transfer/LessonDto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LessonService {
 
-  private resource = 'calendar';
+  private resource = 'lesson';
 
 
   constructor(private jsonp: MyJsonpService) {
   }
 
   getAll() {
-    const subj = new ReplaySubject(1);
+    return this.jsonp.exec<LessonDto[]>(this.resource, 'list');
+  }
 
-    this.jsonp.exec(this.resource, 'list')
-      .subscribe(subj);
-
-    return subj.asObservable();
+  getByCurrentTeacher() {
+    return this.jsonp.exec<LessonDto[]>(this.resource, 'byCurrentTeacher');
   }
 }

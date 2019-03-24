@@ -24,6 +24,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.calendarOptions = {
+      timezone: 'Europe/Berlin',
       editable: false,
       eventLimit: false,
       selectable: true,

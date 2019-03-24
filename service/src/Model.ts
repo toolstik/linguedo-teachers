@@ -1,4 +1,4 @@
-class Model {
+export class Model {
     
     private model: EntitySession;
 
@@ -28,8 +28,16 @@ class Model {
         return this.model.getRepository('class_type');
     }
 
-    get client() {
-        return this.model.getRepository('client');
+    get lesson() {
+        return this.model.getRepository('lesson');
+    }
+
+    get lessonStudents() {
+        return this.model.getRepository('lesson_student');
+    }
+
+    get project() {
+        return this.model.getRepository('project');
     }
 }
 

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
 import {ReplaySubject} from "rxjs";
-import {UserDto} from "../_transfer/UserDto";
 import {map} from "rxjs/operators";
+import {UserDto} from '../../../../shared/transfer/UserDto';
 
 @Injectable({
   providedIn: 'root'
