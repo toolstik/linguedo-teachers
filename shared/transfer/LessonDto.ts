@@ -9,5 +9,4 @@ export class LessonDto {
     teacher: TeacherDto;
     classType: ClassTypeDto;
     group: string;
-    students: StudentDto;
 }

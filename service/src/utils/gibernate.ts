@@ -512,7 +512,6 @@ class Repository {
 
         const inserts = cache.inserts.map(i => mapper.mapToRow(i).value);
         upsertValues.concat(inserts);
-
         this._table
             .upsert(upsertValues, cache.minChangedIndex, []);
         cache.resetChanges();
@@ -625,7 +624,7 @@ class Table {
         this._storageMeta = this._options.rangeScanLazy
             ? this.getDataRangeLazy()
             : this.getDataRangeGreedy();
-
+// console.log(this._storageMeta);
         return this._storageMeta;
     }
 

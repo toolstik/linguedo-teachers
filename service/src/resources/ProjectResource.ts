@@ -2,7 +2,7 @@ import { Model } from "../Model";
 import { requestMapping } from "../main";
 
 @requestMapping('project')
-class ProjectResource {
+export class ProjectResource {
 
     @requestMapping('list')
     getAll() {

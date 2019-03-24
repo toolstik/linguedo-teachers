@@ -1,4 +1,4 @@
-class ServiceError extends Error {
+export class ServiceError extends Error {
     status: string;
     payload: any;
 

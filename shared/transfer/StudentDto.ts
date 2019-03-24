@@ -1,5 +1,4 @@
 import { ProjectDto } from "./ProjectDto";
-import { TeacherDto } from "./TeacherDto";
 
 export class StudentDto {
   id: string;
@@ -7,6 +6,6 @@ export class StudentDto {
   lastName: string;
   skypeId: string;
   project: ProjectDto;
-  teacher: TeacherDto;
 }
+
 

@@ -174,30 +174,30 @@
 
   <div class="row justify-content-center mb-1" *ngIf="(students$ | async) as students; else loading">
     <div class="col">
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <th scope="col">Present in class</th>
-          <th scope="col">Student</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let student of editableLesson.students; index as i">
-          <!--<th scope="row">{{ i + 1 }}</th>-->
-          <td style="text-align: center">
-            <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="true">
-              <label class="custom-control-label" for="student{{i}}"></label>
-            </div>
-            <!--<myCheckbox [ngModel]="true"></myCheckbox>-->
-          </td>
-          <td>
-            {{student.firstName}} {{student.lastName}}
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <!--<table class="table table-striped">-->
+        <!--<thead>-->
+        <!--<tr>-->
+          <!--<th scope="col">Present in class</th>-->
+          <!--<th scope="col">Student</th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+        <!--<tr *ngFor="let student of editableLesson.students; index as i">-->
+          <!--&lt;!&ndash;<th scope="row">{{ i + 1 }}</th>&ndash;&gt;-->
+          <!--<td style="text-align: center">-->
+            <!--&lt;!&ndash;<input type="checkbox" [ngModel]="true" ngbButton>&ndash;&gt;-->
+            <!--<div class="custom-control custom-checkbox">-->
+              <!--<input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="true">-->
+              <!--<label class="custom-control-label" for="student{{i}}"></label>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<myCheckbox [ngModel]="true"></myCheckbox>&ndash;&gt;-->
+          <!--</td>-->
+          <!--<td>-->
+            <!--{{student.firstName}} {{student.lastName}}-->
+          <!--</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+      <!--</table>-->
     </div>
   </div>
 </ng-template>

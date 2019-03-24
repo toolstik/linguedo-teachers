@@ -13,7 +13,6 @@ import {UserDto} from "../../../../shared/transfer/UserDto";
 import {StudentService} from "../_services/student.service";
 import {StudentDto} from "../../../../shared/transfer/StudentDto";
 import {LessonDto} from "../../../../shared/transfer/LessonDto";
-import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-teacher',
@@ -25,7 +24,7 @@ export class TeacherComponent implements OnInit {
   teachers$: Observable<TeacherDto[]>;
   students$: Observable<StudentDto[]>;
   classTypes$: Observable<ClassTypeDto[]>;
-  clients$: Observable<ClientDto[]>;
+  // clients$: Observable<ClientDto[]>;
 
   lessons: LessonDto[];
   events: EventObject[];
@@ -46,9 +45,13 @@ export class TeacherComponent implements OnInit {
     this.teachers$ = this.teacherService.getAll();
     this.students$ = this.studentService.getAll();
     this.classTypes$ = this.classTypeService.getAll();
-    this.clients$ = this.clientService.getAll();
+    // this.clients$ = this.clientService.getAll();
     this.currentUser$ = this.authService.currentUser();
 
+    this.getLessons();
+  }
+
+  private getLessons() {
     this.lessonService.getByCurrentTeacher().subscribe(data => {
       this.lessons = data;
 
@@ -74,6 +77,13 @@ export class TeacherComponent implements OnInit {
   }
 
   saveClass() {
+    this.lessonService.saveTeacherLesson(this.editableLesson)
+      .subscribe(() => {
+        this.getLessons();
+      });
+    this.lessons = null;
+    this.events = null;
+
     this.editableLesson = null;
   }
 

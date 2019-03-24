@@ -1,3 +1,5 @@
+import 'google-apps-script/google-apps-script.spreadsheet'
+
 export class Model {
     
     private model: EntitySession;
@@ -32,7 +34,7 @@ export class Model {
         return this.model.getRepository('lesson');
     }
 
-    get lessonStudents() {
+    get lessonStudent() {
         return this.model.getRepository('lesson_student');
     }
 
@@ -40,5 +42,3 @@ export class Model {
         return this.model.getRepository('project');
     }
 }
-
-
