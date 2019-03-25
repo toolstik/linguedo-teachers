@@ -6,13 +6,15 @@
           <ng-template ngbTabTitle>Classes</ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
-              <div [ngClass]="{'col-7':!!editableLesson, 'col-auto':!editableLesson}">
+              <div [ngClass]="{'col-7':!!selectedLesson, 'col-auto':!selectedLesson}">
                 <ng-container *ngTemplateOutlet="calendar">
                 </ng-container>
               </div>
-              <div *ngIf="editableLesson" class="col-5">
-                <ng-container *ngTemplateOutlet="classView">
-                </ng-container>
+              <div *ngIf="selectedLesson" class="col-5">
+                <app-lesson [event]="selectedEvent"
+                            [lesson]="selectedLesson"
+                            (onSave)="saveClass()"
+                            (onCancel)="cancelSaveClass()"></app-lesson>
               </div>
             </div>
           </ng-template>
@@ -63,14 +65,6 @@
   </div>
 </div>
 
-<ng-template #cloneDatesPopupContent>
-  <ngb-datepicker></ngb-datepicker>
-</ng-template>
-
-<ng-template #askSubstitutionPopupContent>
-  <ngb-datepicker></ngb-datepicker>
-</ng-template>
-
 <ng-template #calendar>
   <ng-container *ngIf="events; else loading">
     <app-calendar [events]="events"
@@ -82,124 +76,7 @@
 </ng-template>
 
 <ng-template #loading>
-  <div class="d-flex justify-content-center">
-    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #classView>
-  <div class="row mb-4 justify-content-between">
-    <div class="col-auto">
-      <p class="h4">{{editableLesson.title}}</p>
-    </div>
-    <div class="col-auto">
-      <div class="btn-group" role="group">
-        <button ngbButton
-                class="btn btn-primary"
-                placement="bottom"
-                container="body"
-                (click)="saveClass()">
-          Save
-        </button>
-        <button ngbButton
-                class="btn btn-outline-secondary"
-                placement="bottom"
-                container="body"
-                (click)="cancelSaveClass()">
-          Cancel
-        </button>
-      </div>
-    </div>
-    <div class="col-auto">
-      <div class="btn-group" role="group">
-        <button ngbButton
-                class="btn btn-primary"
-                placement="bottom"
-                container="body"
-                [ngbPopover]="cloneDatesPopupContent">
-          Clone this class
-        </button>
-        <button ngbButton
-                class="btn btn-primary"
-                placement="bottom"
-                container="body"
-                [ngbPopover]="askSubstitutionPopupContent">
-          Ask substitution for this class
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="row align-items-center mb-4">
-    <!--<div class="col-auto">-->
-    <!--<span class="h6 mr-3">Client:</span>-->
-    <!--<div ngbDropdown *ngIf="(clients$ | async) as clients; else loading" class="d-inline-block">-->
-    <!--<button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>-->
-    <!--<div ngbDropdownMenu aria-labelledby="dropdownBasic2">-->
-    <!--<button *ngFor="let client of clients" class="dropdown-item">{{client.name}}</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <div class="col-auto">
-      <span class="h6 mr-3">Class type:</span>
-      <div ngbDropdown *ngIf="(classTypes$ | async) as classTypes; else loading" class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>{{editableLesson?.classType?.name
-          || 'Select class type'}}
-        </button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-          <button *ngFor="let classType of classTypes"
-                  class="dropdown-item"
-                  (click)="editableLesson.classType = classType"
-          >{{classType.name}}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-auto">
-      <span class="h6 mr-3">From:</span>
-      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.startTime"></myTimePicker>
-    </div>
-
-    <div class="col-auto">
-      <span class="h6 mr-3">To:</span>
-      <myTimePicker class="d-inline-block" [(ngModel)]="editableLesson.endTime"></myTimePicker>
-    </div>
-
-
-  </div>
-
-  <div class="row justify-content-center mb-1" *ngIf="(students$ | async) as students; else loading">
-    <div class="col">
-      <!--<table class="table table-striped">-->
-        <!--<thead>-->
-        <!--<tr>-->
-          <!--<th scope="col">Present in class</th>-->
-          <!--<th scope="col">Student</th>-->
-        <!--</tr>-->
-        <!--</thead>-->
-        <!--<tbody>-->
-        <!--<tr *ngFor="let student of editableLesson.students; index as i">-->
-          <!--&lt;!&ndash;<th scope="row">{{ i + 1 }}</th>&ndash;&gt;-->
-          <!--<td style="text-align: center">-->
-            <!--&lt;!&ndash;<input type="checkbox" [ngModel]="true" ngbButton>&ndash;&gt;-->
-            <!--<div class="custom-control custom-checkbox">-->
-              <!--<input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="true">-->
-              <!--<label class="custom-control-label" for="student{{i}}"></label>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;<myCheckbox [ngModel]="true"></myCheckbox>&ndash;&gt;-->
-          <!--</td>-->
-          <!--<td>-->
-            <!--{{student.firstName}} {{student.lastName}}-->
-          <!--</td>-->
-        <!--</tr>-->
-        <!--</tbody>-->
-      <!--</table>-->
-    </div>
-  </div>
+  <app-loading></app-loading>
 </ng-template>
 
 <ng-template #substitutionProposals>

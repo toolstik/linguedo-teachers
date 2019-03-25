@@ -23,7 +23,6 @@ export class TeacherComponent implements OnInit {
 
   teachers$: Observable<TeacherDto[]>;
   students$: Observable<StudentDto[]>;
-  classTypes$: Observable<ClassTypeDto[]>;
   // clients$: Observable<ClientDto[]>;
 
   lessons: LessonDto[];
@@ -31,7 +30,8 @@ export class TeacherComponent implements OnInit {
 
   currentUser$: Observable<UserDto>;
 
-  editableLesson: LessonDto;
+  selectedLesson: LessonDto;
+  selectedEvent: EventObject;
 
   constructor(private teacherService: TeacherService,
               private studentService: StudentService,
@@ -44,8 +44,6 @@ export class TeacherComponent implements OnInit {
   ngOnInit() {
     this.teachers$ = this.teacherService.getAll();
     this.students$ = this.studentService.getAll();
-    this.classTypes$ = this.classTypeService.getAll();
-    // this.clients$ = this.clientService.getAll();
     this.currentUser$ = this.authService.currentUser();
 
     this.getLessons();
@@ -73,26 +71,27 @@ export class TeacherComponent implements OnInit {
   }
 
   eventSelected(event: EventObject) {
-    this.editableLesson = this.clone(this.lessons[event.id]);
+    this.selectedEvent = event;
+    this.selectedLesson = this.clone(this.lessons[event.id]);
   }
 
   saveClass() {
-    this.lessonService.saveTeacherLesson(this.editableLesson)
-      .subscribe(() => {
-        this.getLessons();
-      });
     this.lessons = null;
     this.events = null;
 
-    this.editableLesson = null;
+    this.selectedLesson = null;
+    this.selectedEvent = null;
+
+    this.getLessons();
   }
 
   cancelSaveClass() {
-    this.editableLesson = null;
+    this.selectedLesson = null;
+    this.selectedEvent = null;
   }
 
   calendarSelect(event: { start: Date, end: Date }) {
-    // this.editableLesson = {} as EventObject;
-    // this.editableLesson.start = event.start;
+    // this.selectedLesson = {} as EventObject;
+    // this.selectedLesson.start = event.start;
   }
 }

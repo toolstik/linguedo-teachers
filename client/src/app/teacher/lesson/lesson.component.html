@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <div class="row mb-4 justify-content-between">
+    <div class="col-auto">
+      <p class="h4">{{selectedEvent.title}}</p>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group" role="group">
+        <button ngbButton
+                class="btn btn-primary"
+                placement="bottom"
+                container="body"
+                (click)="save()">
+          Save
+        </button>
+        <button ngbButton
+                class="btn btn-outline-secondary"
+                placement="bottom"
+                container="body"
+                (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group" role="group">
+        <button ngbButton
+                class="btn btn-primary"
+                placement="bottom"
+                container="body"
+                [ngbPopover]="cloneDatesPopupContent">
+          Clone this class
+        </button>
+        <button ngbButton
+                class="btn btn-primary"
+                placement="bottom"
+                container="body"
+                [ngbPopover]="askSubstitutionPopupContent">
+          Ask substitution for this class
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-4">
+    <!--<div class="col-auto">-->
+    <!--<span class="h6 mr-3">Client:</span>-->
+    <!--<div ngbDropdown *ngIf="(clients$ | async) as clients; else loading" class="d-inline-block">-->
+    <!--<button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>-->
+    <!--<div ngbDropdownMenu aria-labelledby="dropdownBasic2">-->
+    <!--<button *ngFor="let client of clients" class="dropdown-item">{{client.name}}</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <div class="col-auto">
+      <span class="h6 mr-3">Class type:</span>
+      <div ngbDropdown *ngIf="(classTypes$ | async) as classTypes; else loading" class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>{{selectedLesson?.classType?.name
+          || 'Select class type'}}
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
+          <button *ngFor="let classType of classTypes"
+                  class="dropdown-item"
+                  (click)="selectedLesson.classType = classType"
+          >{{classType.name}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-auto">
+      <span class="h6 mr-3">From:</span>
+      <myTimePicker class="d-inline-block" [(ngModel)]="selectedLesson.startTime"></myTimePicker>
+    </div>
+
+    <div class="col-auto">
+      <span class="h6 mr-3">To:</span>
+      <myTimePicker class="d-inline-block" [(ngModel)]="selectedLesson.endTime"></myTimePicker>
+    </div>
+
+
+  </div>
+
+  <!--<div class="row justify-content-center mb-1" *ngIf="(students$ | async) as students; else loading">-->
+    <!--<div class="col">-->
+      <!--<table class="table table-striped">-->
+        <!--<thead>-->
+        <!--<tr>-->
+          <!--<th scope="col">Present in class</th>-->
+          <!--<th scope="col">Student</th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+        <!--<tr *ngFor="let student of selectedLesson.students; index as i">-->
+          <!--&lt;!&ndash;<th scope="row">{{ i + 1 }}</th>&ndash;&gt;-->
+          <!--<td style="text-align: center">-->
+            <!--&lt;!&ndash;<input type="checkbox" [ngModel]="true" ngbButton>&ndash;&gt;-->
+            <!--<div class="custom-control custom-checkbox">-->
+              <!--<input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="true">-->
+              <!--<label class="custom-control-label" for="student{{i}}"></label>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<myCheckbox [ngModel]="true"></myCheckbox>&ndash;&gt;-->
+          <!--</td>-->
+          <!--<td>-->
+            <!--{{student.firstName}} {{student.lastName}}-->
+          <!--</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+      <!--</table>-->
+    <!--</div>-->
+  <!--</div>-->
+</div>
+
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
+
+<ng-template #cloneDatesPopupContent>
+  <ngb-datepicker></ngb-datepicker>
+</ng-template>
+
+<ng-template #askSubstitutionPopupContent>
+  <ngb-datepicker></ngb-datepicker>
+</ng-template>

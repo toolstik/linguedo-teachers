@@ -12,6 +12,9 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CheckboxComponent} from './common/checkbox/checkbox.component';
 import {LoginComponent} from './login/login.component';
 import {TimepickerComponent} from './common/timepicker/timepicker.component';
+import {ConfirmWindowComponent} from "./common/confirm-window/confirm-window.component";
+import { LessonComponent } from './teacher/lesson/lesson.component';
+import { LoadingComponent } from './common/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,10 @@ import {TimepickerComponent} from './common/timepicker/timepicker.component';
     TeacherComponent,
     CheckboxComponent,
     LoginComponent,
-    TimepickerComponent
+    TimepickerComponent,
+    ConfirmWindowComponent,
+    LessonComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

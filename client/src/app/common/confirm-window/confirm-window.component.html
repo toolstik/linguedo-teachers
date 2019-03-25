@@ -1,0 +1,28 @@
+<ng-template #myWindow let-modal>
+  <div class="modal-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col text-center">
+          <ng-content></ng-content>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-3">
+          <button ngbButton
+                  class="btn btn-primary text-uppercase"
+                  (onClick)="ok()">
+            OK
+          </button>
+        </div>
+        <div class="col-lg-3">
+          <button ngbButton
+                  class="btn btn-outline-primary text-uppercase"
+                  (onClick)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
