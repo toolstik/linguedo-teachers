@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
 import {ClassTypeDto} from '../../../../shared/transfer/ClassTypeDto';
-import {ReplaySubject} from "rxjs";
+import {BehaviorSubject, ReplaySubject} from "rxjs";
+import {map, mergeMap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,20 @@ export class ClassTypeService {
 
   private resource = 'classType';
 
+  private all$: BehaviorSubject<ClassTypeDto[]>;
+
   constructor(private jsonp: MyJsonpService) {
   }
 
   getAll() {
-    const subj = new ReplaySubject<ClassTypeDto[]>(1);
+    if (this.all$)
+      return this.all$.asObservable();
 
-    this.jsonp.exec(this.resource, 'list')
-      .subscribe(subj);
+    return this.jsonp.exec<ClassTypeDto[]>(this.resource, 'list')
+      .pipe(mergeMap(data => {
+        this.all$ = new BehaviorSubject<ClassTypeDto[]>(data);
 
-    return subj.asObservable();
+        return this.all$.asObservable();
+      }));
   }
 }

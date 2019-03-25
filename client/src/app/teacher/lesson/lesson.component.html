@@ -7,15 +7,11 @@
       <div class="btn-group" role="group">
         <button ngbButton
                 class="btn btn-primary"
-                placement="bottom"
-                container="body"
                 (click)="save()">
           Save
         </button>
         <button ngbButton
                 class="btn btn-outline-secondary"
-                placement="bottom"
-                container="body"
                 (click)="cancel()">
           Cancel
         </button>
@@ -54,7 +50,7 @@
 
     <div class="col-auto">
       <span class="h6 mr-3">Class type:</span>
-      <div ngbDropdown *ngIf="(classTypes$ | async) as classTypes; else loading" class="d-inline-block">
+      <div ngbDropdown *ngIf="classTypes; else loading" class="d-inline-block">
         <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>{{selectedLesson?.classType?.name
           || 'Select class type'}}
         </button>
@@ -81,34 +77,92 @@
 
   </div>
 
-  <!--<div class="row justify-content-center mb-1" *ngIf="(students$ | async) as students; else loading">-->
-    <!--<div class="col">-->
-      <!--<table class="table table-striped">-->
-        <!--<thead>-->
-        <!--<tr>-->
-          <!--<th scope="col">Present in class</th>-->
-          <!--<th scope="col">Student</th>-->
-        <!--</tr>-->
-        <!--</thead>-->
-        <!--<tbody>-->
-        <!--<tr *ngFor="let student of selectedLesson.students; index as i">-->
-          <!--&lt;!&ndash;<th scope="row">{{ i + 1 }}</th>&ndash;&gt;-->
-          <!--<td style="text-align: center">-->
-            <!--&lt;!&ndash;<input type="checkbox" [ngModel]="true" ngbButton>&ndash;&gt;-->
-            <!--<div class="custom-control custom-checkbox">-->
-              <!--<input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="true">-->
-              <!--<label class="custom-control-label" for="student{{i}}"></label>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;<myCheckbox [ngModel]="true"></myCheckbox>&ndash;&gt;-->
-          <!--</td>-->
-          <!--<td>-->
-            <!--{{student.firstName}} {{student.lastName}}-->
-          <!--</td>-->
-        <!--</tr>-->
-        <!--</tbody>-->
-      <!--</table>-->
-    <!--</div>-->
-  <!--</div>-->
+  <div class="row justify-content-center mb-1" *ngIf="students; else loading">
+    <div class="col">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Present in class</th>
+          <th scope="col">Student</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let student of students; index as i">
+          <!--<th scope="row">{{ i + 1 }}</th>-->
+          <td style="text-align: center" [ngClass]="{disable: !student.isActive}">
+            <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="student.isVisited">
+              <label class="custom-control-label" for="student{{i}}"></label>
+            </div>
+            <!--<myCheckbox [ngModel]="true"></myCheckbox>-->
+          </td>
+          <td [ngClass]="{disable: !student.isActive}">
+            {{student.student.firstName}} {{student.student.lastName}}
+          </td>
+          <td style="text-align: center">
+            <button *ngIf="student.isActive"
+                    ngbButton
+                    class="btn btn-outline-danger"
+                    ngbTooltip="Remove"
+                    (click)="removeStudent(student)">
+              X
+            </button>
+            <button *ngIf="!student.isActive"
+                    ngbButton
+                    class="btn btn-outline-success"
+                    (click)="restoreStudent(student)">
+              Restore
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="!newStudent" class="row justify-content-center">
+    <div class="col-3 align-content-center">
+      <button ngbButton
+              class="btn btn-primary w-100"
+              ngbTooltip="Add Student"
+              (click)="createStudent()">
+        +
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="newStudent" class="row justify-content-center">
+    <div class="col-auto align-content-center">
+      <div ngbDropdown *ngIf="classTypes; else loading" class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic4" ngbDropdownToggle>
+          {{selectedLesson?.classType?.name
+          || 'Select class type'}}
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
+          <button *ngFor="let classType of classTypes"
+                  class="dropdown-item"
+                  (click)="selectedLesson.classType = classType"
+          >{{classType.name}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="btn-group" role="group">
+        <button ngbButton
+                class="btn btn-primary"
+                (click)="addStudent()">
+          Add
+        </button>
+        <button ngbButton
+                class="btn btn-outline-primary"
+                (click)="cancelAddStudent()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template #loading>

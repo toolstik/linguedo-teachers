@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MyJsonpService} from "./my-jsonp.service";
 import {LessonDto} from "../../../../shared/transfer/LessonDto";
+import {LessonStudentDto} from "../../../../shared/transfer/LessonStudentDto";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,10 @@ export class LessonService {
   }
 
   saveTeacherLesson(lesson: LessonDto) {
-    return this.jsonp.exec<LessonDto>(this.resource, 'save', lesson);
+    return this.jsonp.exec(this.resource, 'save', lesson);
+  }
+
+  getStudents(lessonId: string) {
+    return this.jsonp.exec<LessonStudentDto[]>(this.resource, 'getStudents', lessonId);
   }
 }

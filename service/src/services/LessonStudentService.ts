@@ -6,6 +6,13 @@ export class LessonStudentService {
     }
 
     getStudentsByLessonId(lessonId: string) {
-        return this.model.lessonStudent.find({lesson: lessonId, isActive: true}) as LessonStudentDto[];
+        return this.model.lessonStudent
+            .find({lesson: lessonId, isActive: true})
+            .map(s => {
+                return {
+                    ...s,
+                    student: this.model.student.findOne({id: s.student})
+                } as LessonStudentDto;
+            });
     }
 }
