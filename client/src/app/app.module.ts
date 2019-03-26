@@ -15,6 +15,7 @@ import {TimepickerComponent} from './common/timepicker/timepicker.component';
 import {ConfirmWindowComponent} from "./common/confirm-window/confirm-window.component";
 import { LessonComponent } from './teacher/lesson/lesson.component';
 import { LoadingComponent } from './common/loading/loading.component';
+import { DropdownComponent } from './common/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { LoadingComponent } from './common/loading/loading.component';
     TimepickerComponent,
     ConfirmWindowComponent,
     LessonComponent,
-    LoadingComponent
+    LoadingComponent,
+    DropdownComponent
   ],
   imports: [
     BrowserModule,

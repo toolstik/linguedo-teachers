@@ -4,9 +4,10 @@ import {EventObject} from "fullcalendar";
 import {LessonService} from "../../_services/lesson.service";
 import {ClassTypeService} from "../../_services/class-type.service";
 import {ClassTypeDto} from "../../../../../shared/transfer/ClassTypeDto";
-import {Observable} from "rxjs";
 import {LessonStudentDto} from "../../../../../shared/transfer/LessonStudentDto";
 import {StudentDto} from "../../../../../shared/transfer/StudentDto";
+import {TeacherService} from "../../_services/teacher.service";
+import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDto";
 
 @Component({
   selector: 'app-lesson',
@@ -22,11 +23,14 @@ export class LessonComponent implements OnInit {
   @Output() onCancel = new EventEmitter();
 
   classTypes: ClassTypeDto[];
-  students: LessonStudentDto[];
+  lessonStudents: LessonStudentDto[];
   newStudent: StudentDto;
+  addStudentActive = false;
+  teacherStudents: StudentTeacherDto[];
 
   constructor(private lessonService: LessonService,
-              private classTypeService: ClassTypeService) {
+              private classTypeService: ClassTypeService,
+              private teacherService: TeacherService) {
   }
 
   ngOnInit() {
@@ -34,20 +38,40 @@ export class LessonComponent implements OnInit {
 
     this.getClassTypes();
     this.getStudents();
+    this.getTeacherStudents();
+  }
+
+  displayStudent = (x: StudentDto) => `${x.firstName} ${x.lastName}`;
+  displayClassType = (x: ClassTypeDto) => x.name;
+
+  get availableStudents() {
+    if (!this.teacherStudents)
+      return null;
+
+    return this.teacherStudents
+      .filter(s => s.classType.id == this.selectedLesson.classType.id)
+      .map(s => s.student);
   }
 
   getStudents() {
     this.lessonService.getStudents(this.selectedLesson.id)
       .subscribe(data => {
-        this.students = data;
-      })
+        this.lessonStudents = data;
+      });
   }
 
   getClassTypes() {
     this.classTypeService.getAll()
       .subscribe(data => {
         this.classTypes = data;
-      })
+      });
+  }
+
+  getTeacherStudents() {
+    this.teacherService.getStudents()
+      .subscribe(data => {
+        this.teacherStudents = data;
+      });
   }
 
   save() {
@@ -70,7 +94,8 @@ export class LessonComponent implements OnInit {
   }
 
   createStudent() {
-    this.newStudent = new StudentDto();
+    // this.newStudent = new StudentDto();
+    this.addStudentActive = true;
   }
 
   addStudent() {
@@ -84,11 +109,15 @@ export class LessonComponent implements OnInit {
       isVisited: true
     };
 
-    this.students.push(lessonStudent);
+    this.lessonStudents.push(lessonStudent);
     this.newStudent = null;
+    this.addStudentActive = false;
+
   }
 
   cancelAddStudent() {
     this.newStudent = null;
+    this.addStudentActive = false;
+
   }
 }

@@ -1,11 +1,11 @@
-import { ProjectDto } from "./ProjectDto";
+import {ProjectDto} from "./ProjectDto";
 
 export class StudentDto {
-  id: string;
-  firstName: string;
-  lastName: string;
-  skypeId: string;
-  project: ProjectDto;
+    id: string;
+    firstName: string;
+    lastName: string;
+    skypeId: string;
+    project: ProjectDto;
 }
 
 

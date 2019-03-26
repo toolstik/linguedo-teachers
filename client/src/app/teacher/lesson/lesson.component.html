@@ -50,18 +50,11 @@
 
     <div class="col-auto">
       <span class="h6 mr-3">Class type:</span>
-      <div ngbDropdown *ngIf="classTypes; else loading" class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic3" ngbDropdownToggle>{{selectedLesson?.classType?.name
-          || 'Select class type'}}
-        </button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-          <button *ngFor="let classType of classTypes"
-                  class="dropdown-item"
-                  (click)="selectedLesson.classType = classType"
-          >{{classType.name}}
-          </button>
-        </div>
-      </div>
+      <myDropdown class="d-inline-block"
+                  [(ngModel)]="selectedLesson.classType"
+                  [source]="classTypes"
+                  [displayFunc]="displayClassType"
+      ></myDropdown>
     </div>
 
     <div class="col-auto">
@@ -77,7 +70,7 @@
 
   </div>
 
-  <div class="row justify-content-center mb-1" *ngIf="students; else loading">
+  <div class="row justify-content-center mb-1" *ngIf="lessonStudents; else loading">
     <div class="col">
       <table class="table table-striped">
         <thead>
@@ -87,7 +80,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let student of students; index as i">
+        <tr *ngFor="let student of lessonStudents; index as i">
           <!--<th scope="row">{{ i + 1 }}</th>-->
           <td style="text-align: center" [ngClass]="{disable: !student.isActive}">
             <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
@@ -121,7 +114,7 @@
     </div>
   </div>
 
-  <div *ngIf="!newStudent" class="row justify-content-center">
+  <div *ngIf="!addStudentActive" class="row justify-content-center">
     <div class="col-3 align-content-center">
       <button ngbButton
               class="btn btn-primary w-100"
@@ -132,26 +125,17 @@
     </div>
   </div>
 
-  <div *ngIf="newStudent" class="row justify-content-center">
+  <div *ngIf="addStudentActive" class="row justify-content-center">
     <div class="col-auto align-content-center">
-      <div ngbDropdown *ngIf="classTypes; else loading" class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic4" ngbDropdownToggle>
-          {{selectedLesson?.classType?.name
-          || 'Select class type'}}
-        </button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
-          <button *ngFor="let classType of classTypes"
-                  class="dropdown-item"
-                  (click)="selectedLesson.classType = classType"
-          >{{classType.name}}
-          </button>
-        </div>
-      </div>
+      <myDropdown [(ngModel)]="newStudent"
+                  [source]="availableStudents"
+                  [displayFunc]="displayStudent"></myDropdown>
     </div>
     <div class="col-auto">
       <div class="btn-group" role="group">
         <button ngbButton
                 class="btn btn-primary"
+                [ngClass]="{disable: !newStudent}"
                 (click)="addStudent()">
           Add
         </button>

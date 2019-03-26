@@ -23,7 +23,7 @@ export class LessonService {
             //     .find({ lesson: l.id })
             //     .map(s => this.model.student.findOne({ id: s.student }))
         }
-    }
+    };
 
     getAll() {
         return this.model.lesson.findAll()

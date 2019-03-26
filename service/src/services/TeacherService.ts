@@ -9,6 +9,10 @@ export class TeacherService {
     ) {
     }
 
+    getAll(){
+        return this.model.teacher.findAll();
+    }
+
     getCurrent(): TeacherDto {
         const user = AuthService.getCurrentUser();
 

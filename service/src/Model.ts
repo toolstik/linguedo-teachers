@@ -25,6 +25,10 @@ export class Model {
     get student() {
         return this.model.getRepository('student');
     }
+    get studentTeacher() {
+        return this.model.getRepository('student_teacher');
+    }
+
 
     get classType() {
         return this.model.getRepository('class_type');

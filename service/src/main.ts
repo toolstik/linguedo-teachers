@@ -1,5 +1,6 @@
 import { AuthService } from "./services/AuthService";
 import { Resources } from "./Resources";
+import {ServiceError} from "./ServiceError";
 
 function doGet(e) {
     let responce: Responce;
