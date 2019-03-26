@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {LessonDto} from "../../../../../shared/transfer/LessonDto";
 import {EventObject} from "fullcalendar";
 import {LessonService} from "../../_services/lesson.service";
@@ -16,12 +16,19 @@ import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDt
 })
 export class LessonComponent implements OnInit {
 
-  @Input('event') selectedEvent: EventObject;
-  @Input('lesson') selectedLesson: LessonDto;
+  @Input() set event(value: EventObject){
+    this.selectedEvent = value;
+  }
+  @Input() set lesson(value: LessonDto){
+    this.selectedLesson = value;
+    this.getStudents();
+  }
 
   @Output() onSave = new EventEmitter();
   @Output() onCancel = new EventEmitter();
 
+  selectedEvent: EventObject;
+  selectedLesson: LessonDto;
   classTypes: ClassTypeDto[];
   lessonStudents: LessonStudentDto[];
   newStudent: StudentDto;
@@ -51,6 +58,9 @@ export class LessonComponent implements OnInit {
 
     return this.teacherStudents
       .filter(s => {
+        if(!this.selectedLesson.classType)
+          return false;
+
         if (s.classType.id != this.selectedLesson.classType.id)
           return false;
 
@@ -63,6 +73,13 @@ export class LessonComponent implements OnInit {
   }
 
   getStudents() {
+    this.lessonStudents = null;
+
+    if(!this.selectedLesson.id){
+      this.lessonStudents = [];
+      return;
+    }
+
     this.lessonService.getStudents(this.selectedLesson.id)
       .subscribe(data => {
         this.lessonStudents = data;

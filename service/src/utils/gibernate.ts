@@ -360,7 +360,11 @@ class Mapper {
         if (field.readonly)
             return false;
 
-        const newValue = field.formula ? field.formula : obj[field.name];
+        let newValue = field.formula ? field.formula : obj[field.name];
+
+        if(newValue == null)
+            newValue = "";
+
         if (target[field.columnIndex] != newValue) {
             target[field.columnIndex] = newValue;
             return true;

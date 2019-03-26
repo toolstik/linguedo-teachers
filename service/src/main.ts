@@ -1,18 +1,20 @@
-import { AuthService } from "./services/AuthService";
-import { Resources } from "./Resources";
+import {AuthService} from "./services/AuthService";
+import {Resources} from "./Resources";
 import {ServiceError} from "./ServiceError";
 
 function doGet(e) {
-    let responce: Responce;
+    let response: Responce;
+    let request: Request;
     try {
-        const result = execute(e);
-        responce = {
+        request = JSON.parse(e.parameter.request);
+        const result = Resources.processRequest(this.clone(request));
+        response = {
             success: true,
             body: result
         }
     }
     catch (error) {
-        responce = {
+        response = {
             success: false,
             error: error
         };
@@ -20,17 +22,17 @@ function doGet(e) {
         console.error({
             user: getCurrentUserName(),
             error: error,
+            request: request,
             parameters: e.parameter
         });
     }
-    const resultString = JSON.stringify(responce);
+    const resultString = JSON.stringify(response);
     return ContentService.createTextOutput(e.parameter.callback + "(" + resultString + ");")
         .setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
 
-function execute(e) {
-    const request: Request = JSON.parse(e.parameter.request);
-    return Resources.processRequest(request);
+export function clone<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
 }
 
 export function getCurrentUserName() {

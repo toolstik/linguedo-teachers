@@ -13,6 +13,7 @@ import {UserDto} from "../../../../shared/transfer/UserDto";
 import {StudentService} from "../_services/student.service";
 import {StudentDto} from "../../../../shared/transfer/StudentDto";
 import {LessonDto} from "../../../../shared/transfer/LessonDto";
+import {Moment} from "moment";
 
 @Component({
   selector: 'app-teacher',
@@ -90,8 +91,11 @@ export class TeacherComponent implements OnInit {
     this.selectedEvent = null;
   }
 
-  calendarSelect(event: { start: Date, end: Date }) {
-    // this.selectedLesson = {} as EventObject;
-    // this.selectedLesson.start = event.start;
+  calendarSelect(event: { start: Moment, end: Moment }) {
+    // console.log(event);
+    this.selectedEvent = {title: 'New Lesson'} as EventObject;
+    this.selectedLesson = {} as LessonDto;
+    this.selectedLesson.startTime = event.start.toDate();
+    this.selectedLesson.endTime = event.end.toDate();
   }
 }

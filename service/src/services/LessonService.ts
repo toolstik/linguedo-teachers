@@ -40,9 +40,6 @@ export class LessonService {
     }
 
     saveMyLesson(lesson: LessonDto) {
-        if (lesson.teacher == null || lesson.teacher.id != getCurrentUserName())
-            return;
-
         lesson.teacher = this.teacherService.getCurrent();
         lesson.startTime = new Date(lesson.startTime);
         lesson.endTime = new Date(lesson.endTime);
@@ -60,10 +57,12 @@ export class LessonService {
 
         this.calendarService.saveLesson(lesson);
 
+        lessonToSave.id = lesson.id;
+
         this.model.lesson.save(lessonToSave);
         this.model.lesson.commit();
 
-        return;
+        return lesson;
     }
 }
 

@@ -1,5 +1,6 @@
 import { AuthService } from "./services/AuthService";
 import { getCurrentUserName } from "./main";
+import {ServiceError} from "./ServiceError";
 
 export class Resources {
 

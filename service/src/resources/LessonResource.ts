@@ -22,8 +22,12 @@ class LessonResource {
     @requestMapping('save')
     @preAuthorize(['teacher'])
     saveTeacherLesson(lesson: { lesson: LessonDto; students: LessonStudentDto[] }) {
+        lesson.lesson = new LessonService().saveMyLesson(lesson.lesson);
+
+        for (let i of lesson.students)
+            i.lesson = lesson.lesson.id;
+
         new LessonStudentService().saveMany(lesson.students);
-        new LessonService().saveMyLesson(lesson.lesson);
     }
 
     @requestMapping('getStudents')

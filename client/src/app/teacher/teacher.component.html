@@ -69,7 +69,7 @@
   <ng-container *ngIf="events; else loading">
     <app-calendar [events]="events"
                   (eventSelected)="eventSelected($event)"
-                  (onSelect)="calendarSelect($event)"
+                  (onSelect)="calendarSelect($event.detail)"
     >Loading...
     </app-calendar>
   </ng-container>
