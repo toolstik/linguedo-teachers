@@ -2,6 +2,7 @@ import {LessonDto} from './../../../shared/transfer/LessonDto';
 import {LessonService} from "../services/LessonService";
 import {requestMapping, preAuthorize} from "../main";
 import {LessonStudentService} from "../services/LessonStudentService";
+import {LessonStudentDto} from "../../../shared/transfer/LessonStudentDto";
 
 @requestMapping('lesson')
 class LessonResource {
@@ -20,8 +21,9 @@ class LessonResource {
 
     @requestMapping('save')
     @preAuthorize(['teacher'])
-    saveTeacherLesson(lesson: LessonDto) {
-        new LessonService().saveMyLesson(lesson);
+    saveTeacherLesson(lesson: { lesson: LessonDto; students: LessonStudentDto[] }) {
+        new LessonStudentService().saveMany(lesson.students);
+        new LessonService().saveMyLesson(lesson.lesson);
     }
 
     @requestMapping('getStudents')

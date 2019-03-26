@@ -26,6 +26,7 @@ export class LessonComponent implements OnInit {
   lessonStudents: LessonStudentDto[];
   newStudent: StudentDto;
   addStudentActive = false;
+  loadingEnabled = false;
   teacherStudents: StudentTeacherDto[];
 
   constructor(private lessonService: LessonService,
@@ -49,7 +50,15 @@ export class LessonComponent implements OnInit {
       return null;
 
     return this.teacherStudents
-      .filter(s => s.classType.id == this.selectedLesson.classType.id)
+      .filter(s => {
+        if (s.classType.id != this.selectedLesson.classType.id)
+          return false;
+
+        if(this.lessonStudents.some(ls => ls.student.id == s.student.id))
+          return false;
+
+        return true;
+      })
       .map(s => s.student);
   }
 
@@ -75,7 +84,9 @@ export class LessonComponent implements OnInit {
   }
 
   save() {
-    this.lessonService.saveTeacherLesson(this.selectedLesson)
+    this.loadingEnabled = true;
+
+    this.lessonService.saveTeacherLesson(this.selectedLesson, this.lessonStudents)
       .subscribe(() => {
         this.onSave.next();
       });
