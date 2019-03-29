@@ -528,10 +528,9 @@ class Repository {
     commit() {
         const cache = this.cache();
 
-        if (!cache.hasChanges) return;
+        if (!cache.hasChanges()) return;
 
         const mapper = this.mapper();
-
 
         if (cache.isInsertOnly()) {
 
@@ -542,7 +541,7 @@ class Repository {
         }
 
         const upsertRows = this._table.values();
-        const upsertValues: Object[][] = []
+        let upsertValues: Object[][] = []
 
         for (let i = cache.minChangedIndex;
              i <= Math.min(cache.maxChangedIndex, upsertRows.length - 1); i++) {
@@ -557,7 +556,7 @@ class Repository {
         }
 
         const inserts = cache.inserts.map(i => mapper.mapToRow(i).value);
-        upsertValues.concat(inserts);
+        upsertValues = upsertValues.concat(inserts);
 
         this._table
             .upsert(upsertValues, cache.minChangedIndex, []);

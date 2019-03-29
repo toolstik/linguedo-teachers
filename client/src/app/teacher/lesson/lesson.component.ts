@@ -10,11 +10,13 @@ import {TeacherService} from "../../_services/teacher.service";
 import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDto";
 import {ConfirmWindowComponent} from "../../common/confirm-window/confirm-window.component";
 import {WindowComponent} from "../../common/window/window.component";
+import {NgbDateAdapter, NgbDateNativeAdapter} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-lesson',
   templateUrl: './lesson.component.html',
-  styleUrls: ['./lesson.component.css']
+  styleUrls: ['./lesson.component.css'],
+  providers: [{provide: NgbDateAdapter, useClass: NgbDateNativeAdapter}]
 })
 export class LessonComponent implements OnInit {
 
@@ -165,6 +167,8 @@ export class LessonComponent implements OnInit {
   }
 
   cloneLessonConfirmed() {
+    this.loadingEnabled = true;
+
     this.lessonService
       .cloneTeacherLesson(this.selectedLesson, this.lessonStudents, this.cloneDates)
       .subscribe(() => {
@@ -174,5 +178,18 @@ export class LessonComponent implements OnInit {
 
   cloneButtonClick() {
     this.cloneDatesSelectWindow.open();
+  }
+
+  setStartDate(date: Date) {
+    if (!this.selectedLesson.startTime)
+      this.selectedLesson.startTime = new Date();
+    this.selectedLesson.startTime.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  setStartTime(date: Date) {
+    if (!this.selectedLesson.startTime)
+      this.selectedLesson.startTime = new Date();
+
+    this.selectedLesson.startTime.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
   }
 }

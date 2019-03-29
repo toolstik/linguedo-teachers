@@ -1,5 +1,5 @@
 import {TeacherService} from './TeacherService';
-import {LessonDto} from './../../../shared/transfer/LessonDto';
+import {LessonDto} from '../../../shared/transfer/LessonDto';
 import {Model} from '../Model';
 import {clone, getCurrentUserName} from '../main';
 import {CalendarService} from './CalendarService';
@@ -44,7 +44,11 @@ export class LessonService {
     saveTeacherLesson(lesson: LessonDto, students?: LessonStudentDto[]) {
         lesson.teacher = this.teacherService.getCurrent();
         lesson.startTime = new Date(lesson.startTime);
-        lesson.endTime = new Date(lesson.endTime);
+        lesson.endTime = new Date(lesson.startTime);
+        lesson.endTime.setHours(
+            lesson.startTime.getHours(),
+            lesson.startTime.getMinutes() + lesson.classType.duration
+        );
 
         let lessonToSave =
             lesson.id
@@ -53,6 +57,7 @@ export class LessonService {
 
         lessonToSave.startTime = lesson.startTime;
         lessonToSave.endTime = lesson.endTime;
+
         lessonToSave.teacher = lesson.teacher.id;
         lessonToSave.classType = lesson.classType.id;
         lessonToSave.group = lesson.group;

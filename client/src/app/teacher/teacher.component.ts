@@ -50,9 +50,13 @@ export class TeacherComponent implements OnInit {
 
   private getLessons() {
     this.lessonService.getByCurrentTeacher().subscribe(data => {
-      this.lessons = data;
+      this.lessons = data.map(l => {
+        l.startTime = new Date(l.startTime);
+        l.endTime = new Date(l.endTime);
+        return l;
+      });
 
-      this.events = data.map((l, i) => {
+      this.events = this.lessons.map((l, i) => {
         return {
           id: i,
           title: `${l.teacher.firstName} ${l.teacher.lastName} ${l.classType.id}`,
@@ -71,7 +75,7 @@ export class TeacherComponent implements OnInit {
 
   eventSelected(event: EventObject) {
     this.selectedEvent = event;
-    this.selectedLesson = this.clone(this.lessons[event.id]);
+    this.selectedLesson = {...this.lessons[event.id]};
   }
 
   saveClass() {
