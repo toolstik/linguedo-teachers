@@ -28,8 +28,8 @@ export class DatepickerRangeComponent {
     } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
       this.toDate = date;
       this.onRangeSelected.next({
-        fromDate: new Date(this.fromDate.year, this.fromDate.month, this.fromDate.day),
-        toDate: new Date(this.toDate.year, this.toDate.month, this.toDate.day)
+        fromDate: new Date(this.fromDate.year, this.fromDate.month - 1, this.fromDate.day),
+        toDate: new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day)
       });
     } else {
       this.toDate = null;

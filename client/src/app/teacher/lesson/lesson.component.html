@@ -163,7 +163,7 @@
   <ngb-datepicker></ngb-datepicker>
 </ng-template>
 
-<confirm-window #cloneConfirmWindow>
+<confirm-window #cloneConfirmWindow (onOk)="cloneLessonConfirmed()">
   <ng-container *ngIf="cloneRangeArray as range">
     <span>
     You are attempting to clone class {{selectedEvent.title}} to these {{range.length}} days:

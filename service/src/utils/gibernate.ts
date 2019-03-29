@@ -1,4 +1,4 @@
-/*! gibernate - v0.1.0 - 2019-03-18 04:02:58 */
+/*! gibernate - v0.1.0 - 2019-03-29 17:51:06 */
 class CacheL2 {
     increment: number;
     minChangedIndex: number;
@@ -66,7 +66,7 @@ class CacheL2 {
     private updateIndex(field: string, newValue: Entity, oldValue?: Entity) {
         if (!this.indexesEnabled())
             return null;
-            
+
         const indexes = this.indexes();
         const fieldIndex = indexes[field] || (indexes[field] = new Index());
 
@@ -165,7 +165,7 @@ class CacheL2 {
         if (findResult.length > 1)
             throw new Error(`The result contains more than 1 element (${findResult.length})`);
 
-        return findResult[0];
+        return findResult[0] || null;
     }
 
     private applyFilter(entity: Entity, filter: Filter) {
@@ -240,8 +240,13 @@ class EntitySession {
             return this._types[name];
 
         const repoOptions = SessionOptions.getEntityOptions(this.options, name);
-        this._types[name] = new Repository(repoOptions);
+        this._types[name] = new Repository(repoOptions, this);
         return this._types[name];
+    }
+
+    commit() {
+        for (let t in this._types)
+            this._types[t].commit();
     }
 }
 
@@ -279,14 +284,17 @@ class Index {
 class Mapper {
     private _options: Options;
     private _fields: FieldOptions[];
+    private _session: EntitySession;
     private _headers: string[];
 
     constructor(options: {
         options: Options,
-        headers: string[]
+        headers: string[],
+        session: EntitySession
     }) {
         this._options = options.options;
         this._headers = options.headers;
+        this._session = options.session;
 
         this._fields = this.fields();
     }
@@ -338,31 +346,64 @@ class Mapper {
             if (fld.readonly == null)
                 fld.readonly = false;
 
+            if (fld.manyToOne) {
+                if (fld.manyToOne.strict == null)
+                    fld.manyToOne.strict = true;
+
+                if (fld.manyToOne.cascade == null)
+                    fld.manyToOne.cascade = false;
+            }
+
             return fld;
         });
         return this._fields;
     }
 
+    private isEmptyValue(value: any) {
+        return value === null || value === undefined || value === '';
+    }
+
     private mapFieldToObject(field: FieldOptions, row: Object[], target: Entity) {
         let newValue = row[field.columnIndex];
 
-        if (newValue == "" && field.default != null)
-            newValue = field.default;
-
-        if (target[field.name] != newValue) {
-            target[field.name] = newValue;
-            return true;
+        if (this.isEmptyValue(newValue)) {
+            // apply default
+            newValue = field.default != null ? field.default : null;
         }
-        return false;
+
+        if (field.manyToOne) {
+            // many to one
+            if (!this._session)
+                throw new Error(`Unable to use relationship feature without session context`);
+
+            if (!this.isEmptyValue(newValue)) {
+                const refRepo = this._session.getRepository(field.manyToOne.referenceTable);
+                const filter = {} as Filter;
+                filter[field.manyToOne.referenceColumn] = newValue;
+                newValue = refRepo.findOne(filter);
+            }
+        }
+
+        const changed = target[field.name] != newValue;
+        target[field.name] = newValue;
+        return changed;
     }
 
     private mapFieldToRow(field: FieldOptions, obj: Entity, target: Object[]) {
         if (field.readonly)
             return false;
 
-        let newValue = field.formula ? field.formula : obj[field.name];
+        let newValue = obj[field.name];
 
-        if(newValue == null)
+        if (field.formula) {
+            newValue = field.formula;
+        } else if (field.manyToOne) {
+            if (!this.isEmptyValue(newValue)) {
+                newValue = newValue[field.manyToOne.referenceColumn];
+            }
+        }
+
+        if (newValue == null)
             newValue = "";
 
         if (target[field.columnIndex] != newValue) {
@@ -418,7 +459,7 @@ class Repository {
     private _mapper: Mapper;
     private _cache: CacheL2;
 
-    constructor(options: Options) {
+    constructor(options: Options, private session?: EntitySession) {
         this._options = new Options(options);
         this._table = new Table(options);
     }
@@ -428,7 +469,8 @@ class Repository {
 
         this._mapper = new Mapper({
             options: this._options,
-            headers: this._table.headers()
+            headers: this._table.headers(),
+            session: this.session
         });
         return this._mapper;
     }
@@ -464,7 +506,7 @@ class Repository {
     }
 
     /**
-     * Find all objects 
+     * Find all objects
      */
     find(filter: Filter) {
         return this.initCache().find(filter);
@@ -472,7 +514,7 @@ class Repository {
 
     /**
      * Find all objects
-     * 
+     *
      * @param filter search criteria
      */
     findOne(filter: Filter) {
@@ -503,7 +545,7 @@ class Repository {
         const upsertValues: Object[][] = []
 
         for (let i = cache.minChangedIndex;
-            i <= Math.min(cache.maxChangedIndex, upsertRows.length - 1); i++) {
+             i <= Math.min(cache.maxChangedIndex, upsertRows.length - 1); i++) {
             const row = upsertRows[i];
             const update = cache.updates.get(i);
             if (update) {
@@ -516,6 +558,7 @@ class Repository {
 
         const inserts = cache.inserts.map(i => mapper.mapToRow(i).value);
         upsertValues.concat(inserts);
+
         this._table
             .upsert(upsertValues, cache.minChangedIndex, []);
         cache.resetChanges();
@@ -628,7 +671,7 @@ class Table {
         this._storageMeta = this._options.rangeScanLazy
             ? this.getDataRangeLazy()
             : this.getDataRangeGreedy();
-// console.log(this._storageMeta);
+
         return this._storageMeta;
     }
 
@@ -704,6 +747,24 @@ class FieldOptions {
     formula?: string;
     readonly?: boolean;
     default?: any;
+    manyToOne?:ManyToOneRelationship;
+}
+
+
+
+class ManyToOneRelationship {
+    referenceTable: string;
+    referenceColumn: string;
+
+    /**
+     * Checks if referenced object exists
+     */
+    strict?: boolean;
+
+    /**
+     * Cascade save operations
+     */
+    cascade?: boolean;
 }
 
 class Options {
@@ -790,7 +851,7 @@ class SessionOptions {
             if (defined)
                 return defined;
         }
-        
+
         const sheet = options.defaults.spreadsheet.getSheetByName(name);
 
         if (!sheet) return null;
@@ -803,82 +864,82 @@ class SessionOptions {
     }
 }
 if (!Object.assign) {
-  Object.defineProperty(Object, 'assign', {
-    enumerable: false,
-    configurable: true,
-    writable: true,
-    value: function (target, firstSource) {
-      'use strict';
-      if (target === undefined || target === null) {
-        throw new TypeError('Cannot convert first argument to object');
-      }
+    Object.defineProperty(Object, 'assign', {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: function (target, firstSource) {
+            'use strict';
+            if (target === undefined || target === null) {
+                throw new TypeError('Cannot convert first argument to object');
+            }
 
-      var to = Object(target);
-      for (var i = 1; i < arguments.length; i++) {
-        var nextSource = arguments[i];
-        if (nextSource === undefined || nextSource === null) {
-          continue;
-        }
+            var to = Object(target);
+            for (var i = 1; i < arguments.length; i++) {
+                var nextSource = arguments[i];
+                if (nextSource === undefined || nextSource === null) {
+                    continue;
+                }
 
-        var keysArray = Object.keys(Object(nextSource));
-        for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-          var nextKey = keysArray[nextIndex];
-          var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-          if (desc !== undefined && desc.enumerable) {
-            to[nextKey] = nextSource[nextKey];
-          }
+                var keysArray = Object.keys(Object(nextSource));
+                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                    var nextKey = keysArray[nextIndex];
+                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                    if (desc !== undefined && desc.enumerable) {
+                        to[nextKey] = nextSource[nextKey];
+                    }
+                }
+            }
+            return to;
         }
-      }
-      return to;
-    }
-  });
+    });
 }
 
 if (!Object.values) {
-  Object.values = function values(O) {
-    return Object.keys(O).map(k => O[k]);
-  };
+    Object.values = function values(O) {
+        return Object.keys(O).map(k => O[k]);
+    };
 }
 
 if (!Array.prototype.fill) {
-  Array.prototype.fill = function(value) {
+    Array.prototype.fill = function(value) {
 
-    // Шаги 1-2.
-    if (this == null) {
-      throw new TypeError('this is null or not defined');
-    }
+        // Шаги 1-2.
+        if (this == null) {
+            throw new TypeError('this is null or not defined');
+        }
 
-    var O = Object(this);
+        var O = Object(this);
 
-    // Шаги 3-5.
-    var len = O.length >>> 0;
+        // Шаги 3-5.
+        var len = O.length >>> 0;
 
-    // Шаги 6-7.
-    var start = arguments[1];
-    var relativeStart = start >> 0;
+        // Шаги 6-7.
+        var start = arguments[1];
+        var relativeStart = start >> 0;
 
-    // Шаг 8.
-    var k = relativeStart < 0 ?
-      Math.max(len + relativeStart, 0) :
-      Math.min(relativeStart, len);
+        // Шаг 8.
+        var k = relativeStart < 0 ?
+            Math.max(len + relativeStart, 0) :
+            Math.min(relativeStart, len);
 
-    // Шаги 9-10.
-    var end = arguments[2];
-    var relativeEnd = end === undefined ?
-      len : end >> 0;
+        // Шаги 9-10.
+        var end = arguments[2];
+        var relativeEnd = end === undefined ?
+            len : end >> 0;
 
-    // Шаг 11.
-    var final = relativeEnd < 0 ?
-      Math.max(len + relativeEnd, 0) :
-      Math.min(relativeEnd, len);
+        // Шаг 11.
+        var final = relativeEnd < 0 ?
+            Math.max(len + relativeEnd, 0) :
+            Math.min(relativeEnd, len);
 
-    // Шаг 12.
-    while (k < final) {
-      O[k] = value;
-      k++;
-    }
+        // Шаг 12.
+        while (k < final) {
+            O[k] = value;
+            k++;
+        }
 
-    // Шаг 13.
-    return O;
-  };
+        // Шаг 13.
+        return O;
+    };
 }

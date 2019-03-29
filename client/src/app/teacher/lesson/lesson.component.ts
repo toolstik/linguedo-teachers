@@ -181,4 +181,11 @@ export class LessonComponent implements OnInit {
 
     return result;
   }
+
+  cloneLessonConfirmed() {
+    console.log('confirm');
+    this.lessonService
+      .cloneTeacherLesson(this.selectedLesson, this.lessonStudents, this.cloneRangeArray)
+      .subscribe();
+  }
 }

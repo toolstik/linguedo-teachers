@@ -22,6 +22,7 @@ export class LessonStudentService {
 
         for (let item of students) {
             let existing = this.model.lessonStudent
+                // todo multi-column index required
                 .findOne({
                     lesson: item.lesson,
                     student: item.student.id
@@ -42,8 +43,6 @@ export class LessonStudentService {
 
                 this.model.lessonStudent.save(newItem);
             }
-
-            this.model.lessonStudent.commit();
         }
     }
 }
