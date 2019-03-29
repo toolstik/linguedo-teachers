@@ -4,3 +4,7 @@
   filter: alpha(opacity=40);
   pointer-events: none;
 }
+
+.popover{
+  max-width: 50% !important;
+}

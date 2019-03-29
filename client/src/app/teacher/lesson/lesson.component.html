@@ -23,6 +23,8 @@
                 class="btn btn-primary"
                 placement="bottom"
                 container="body"
+                [autoClose]="'outside'"
+                #cloneDatesPopover="ngbPopover"
                 [ngbPopover]="cloneDatesPopupContent">
           Clone this class
         </button>
@@ -85,7 +87,7 @@
           <td style="text-align: center" [ngClass]="{disable: !student.isActive}">
             <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="student.isVisited">
+              <input type="checkbox" class="custom-control-input" id="student{{i}}" [(ngModel)]="student.isVisited">
               <label class="custom-control-label" for="student{{i}}"></label>
             </div>
             <!--<myCheckbox [ngModel]="true"></myCheckbox>-->
@@ -154,9 +156,15 @@
 </ng-template>
 
 <ng-template #cloneDatesPopupContent>
-  <ngb-datepicker></ngb-datepicker>
+  <myDatepickerRange (onRangeSelected)="cloneRangeSelected($event)"></myDatepickerRange>
 </ng-template>
 
 <ng-template #askSubstitutionPopupContent>
   <ngb-datepicker></ngb-datepicker>
 </ng-template>
+
+<confirm-window #cloneConfirmWindow>
+  <ng-container *ngIf="cloneRange">
+    Range {{cloneRange.fromDate}} - {{cloneRange.toDate}}
+  </ng-container>
+</confirm-window>

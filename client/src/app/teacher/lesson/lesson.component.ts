@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {LessonDto} from "../../../../../shared/transfer/LessonDto";
 import {EventObject} from "fullcalendar";
 import {LessonService} from "../../_services/lesson.service";
@@ -8,6 +8,10 @@ import {LessonStudentDto} from "../../../../../shared/transfer/LessonStudentDto"
 import {StudentDto} from "../../../../../shared/transfer/StudentDto";
 import {TeacherService} from "../../_services/teacher.service";
 import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDto";
+import {ConfirmWindowComponent} from "../../common/confirm-window/confirm-window.component";
+import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
+
+type DateRange = { fromDate: Date, toDate: Date };
 
 @Component({
   selector: 'app-lesson',
@@ -16,16 +20,20 @@ import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDt
 })
 export class LessonComponent implements OnInit {
 
-  @Input() set event(value: EventObject){
+  @Input() set event(value: EventObject) {
     this.selectedEvent = value;
   }
-  @Input() set lesson(value: LessonDto){
+
+  @Input() set lesson(value: LessonDto) {
     this.selectedLesson = value;
     this.getStudents();
   }
 
   @Output() onSave = new EventEmitter();
   @Output() onCancel = new EventEmitter();
+
+  @ViewChild('cloneConfirmWindow') cloneConfirmWindow: ConfirmWindowComponent;
+  @ViewChild('cloneDatesPopover') cloneDatesPopover: NgbPopover;
 
   selectedEvent: EventObject;
   selectedLesson: LessonDto;
@@ -35,6 +43,8 @@ export class LessonComponent implements OnInit {
   addStudentActive = false;
   loadingEnabled = false;
   teacherStudents: StudentTeacherDto[];
+
+  cloneRange: DateRange;
 
   constructor(private lessonService: LessonService,
               private classTypeService: ClassTypeService,
@@ -58,13 +68,13 @@ export class LessonComponent implements OnInit {
 
     return this.teacherStudents
       .filter(s => {
-        if(!this.selectedLesson.classType)
+        if (!this.selectedLesson.classType)
           return false;
 
         if (s.classType.id != this.selectedLesson.classType.id)
           return false;
 
-        if(this.lessonStudents.some(ls => ls.student.id == s.student.id))
+        if (this.lessonStudents.some(ls => ls.student.id == s.student.id))
           return false;
 
         return true;
@@ -75,7 +85,7 @@ export class LessonComponent implements OnInit {
   getStudents() {
     this.lessonStudents = null;
 
-    if(!this.selectedLesson.id){
+    if (!this.selectedLesson.id) {
       this.lessonStudents = [];
       return;
     }
@@ -147,5 +157,11 @@ export class LessonComponent implements OnInit {
     this.newStudent = null;
     this.addStudentActive = false;
 
+  }
+
+  cloneRangeSelected(range: DateRange) {
+    this.cloneRange = range;
+    this.cloneDatesPopover.close();
+    this.cloneConfirmWindow.open();
   }
 }

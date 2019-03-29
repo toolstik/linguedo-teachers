@@ -16,6 +16,7 @@ import {ConfirmWindowComponent} from "./common/confirm-window/confirm-window.com
 import { LessonComponent } from './teacher/lesson/lesson.component';
 import { LoadingComponent } from './common/loading/loading.component';
 import { DropdownComponent } from './common/dropdown/dropdown.component';
+import { DatepickerRangeComponent } from './common/datepicker-range/datepicker-range.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { DropdownComponent } from './common/dropdown/dropdown.component';
     ConfirmWindowComponent,
     LessonComponent,
     LoadingComponent,
-    DropdownComponent
+    DropdownComponent,
+    DatepickerRangeComponent
   ],
   imports: [
     BrowserModule,
