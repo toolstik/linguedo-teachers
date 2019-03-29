@@ -4,6 +4,7 @@ import {mergeMap} from "rxjs/operators";
 import {Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {AuthService} from "./auth.service";
+import {AlertService} from "./alert.service";
 
 type response = {
   success: boolean,
@@ -18,7 +19,8 @@ export class MyJsonpService {
 
   private url = environment.service.url;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private alertService: AlertService) {
   }
 
   private getToken() {
@@ -44,6 +46,9 @@ export class MyJsonpService {
             observer.next(resp.body);
           });
         }
+
+        const errorMsg = resp.error.message || resp.error;
+        this.alertService.error(errorMsg);
 
         return throwError(resp.error);
       }))

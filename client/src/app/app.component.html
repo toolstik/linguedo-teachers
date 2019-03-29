@@ -1,3 +1,5 @@
+<app-alert></app-alert>
+
 <ng-container *ngIf="(currentUser$ | async) as curUser; else login">
   <div class="container-fluid px-20">
     <div class="row justify-content-between">
@@ -22,3 +24,5 @@
 <ng-template #login>
   <app-login></app-login>
 </ng-template>
+
+

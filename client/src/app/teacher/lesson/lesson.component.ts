@@ -164,4 +164,21 @@ export class LessonComponent implements OnInit {
     this.cloneDatesPopover.close();
     this.cloneConfirmWindow.open();
   }
+
+  get cloneRangeArray() {
+    if (!this.cloneRange)
+      return null;
+
+    const result: Date[] = [];
+
+    let i = new Date(this.cloneRange.fromDate);
+
+    while (i <= this.cloneRange.toDate) {
+      result.push(i);
+      i = new Date(i);
+      i.setDate(i.getDate() + 1);
+    }
+
+    return result;
+  }
 }

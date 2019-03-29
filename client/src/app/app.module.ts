@@ -17,6 +17,7 @@ import { LessonComponent } from './teacher/lesson/lesson.component';
 import { LoadingComponent } from './common/loading/loading.component';
 import { DropdownComponent } from './common/dropdown/dropdown.component';
 import { DatepickerRangeComponent } from './common/datepicker-range/datepicker-range.component';
+import { AlertComponent } from './alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { DatepickerRangeComponent } from './common/datepicker-range/datepicker-r
     LessonComponent,
     LoadingComponent,
     DropdownComponent,
-    DatepickerRangeComponent
+    DatepickerRangeComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

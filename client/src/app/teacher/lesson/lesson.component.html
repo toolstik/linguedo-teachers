@@ -164,7 +164,13 @@
 </ng-template>
 
 <confirm-window #cloneConfirmWindow>
-  <ng-container *ngIf="cloneRange">
-    Range {{cloneRange.fromDate}} - {{cloneRange.toDate}}
+  <ng-container *ngIf="cloneRangeArray as range">
+    <span>
+    You are attempting to clone class {{selectedEvent.title}} to these {{range.length}} days:
+      <ul>
+        <li *ngFor="let d of range">{{d | date:'dd/MM/yyyy'}}</li>
+      </ul>
+    Do you proceed?
+      </span>
   </ng-container>
 </confirm-window>

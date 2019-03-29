@@ -1,0 +1,6 @@
+<ng-container *ngFor="let alert of alerts">
+  <ngb-alert class="fade show"
+             [type]="alert.type"
+             role="alert"
+             (close)="close(alert)">{{ alert.text }}</ngb-alert>
+</ng-container>
