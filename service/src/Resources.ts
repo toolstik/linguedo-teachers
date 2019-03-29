@@ -1,6 +1,7 @@
 import { AuthService } from "./services/AuthService";
 import { getCurrentUserName } from "./main";
 import {ServiceError} from "./ServiceError";
+import {Model} from "./Model";
 
 export class Resources {
 
@@ -66,6 +67,7 @@ export class Resources {
 
         const start = new Date().getTime();
         const result = method(request.body);
+        Model.commit();
         const end = new Date().getTime();
 
         console.log(`Method '${request.method}' of resource '${request.resource}' has been executed by '${getCurrentUserName()}' in ${end - start}ms`);

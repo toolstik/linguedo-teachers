@@ -1,17 +1,26 @@
 import 'google-apps-script/google-apps-script.spreadsheet'
 
 export class Model {
-    
-    private model: EntitySession;
+
+    private static staticModel: EntitySession;
 
     constructor() {
-        const spreadsheet = SpreadsheetApp.openById('1W3fLlLxMWJJFa4qZ8iJ4JMkYtUKem2VWknlIm6-UKcg');
-        this.model = new EntitySession({
-            defaults: {
-                spreadsheet: spreadsheet,
-                rangeScanLazy: true
-            }
-        });
+        if (!Model.staticModel) {
+            Model.staticModel = new EntitySession({
+                defaults: {
+                    spreadsheet: SpreadsheetApp.openById('1W3fLlLxMWJJFa4qZ8iJ4JMkYtUKem2VWknlIm6-UKcg'),
+                    rangeScanLazy: true
+                }
+            });
+        }
+    }
+
+    private get model() {
+        return Model.staticModel;
+    };
+
+    static commit() {
+        this.staticModel.commit();
     }
 
     get user() {
@@ -25,10 +34,10 @@ export class Model {
     get student() {
         return this.model.getRepository('student');
     }
+
     get studentTeacher() {
         return this.model.getRepository('student_teacher');
     }
-
 
     get classType() {
         return this.model.getRepository('class_type');

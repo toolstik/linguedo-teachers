@@ -1,7 +1,6 @@
-<ng-template #myWindow let-modal>
-  <div class="modal-body">
-    <div class="container">
-      <div class="row justify-content-center">
+<myWindow #myWindow>
+    <div class="container mx-2 my-2">
+      <div class="row justify-content-center mb-2">
         <div class="col text-center">
           <ng-content></ng-content>
         </div>
@@ -11,18 +10,17 @@
         <div class="col-lg-3">
           <button ngbButton
                   class="btn btn-primary text-uppercase"
-                  (onClick)="ok()">
+                  (click)="ok()">
             OK
           </button>
         </div>
         <div class="col-lg-3">
           <button ngbButton
                   class="btn btn-outline-primary text-uppercase"
-                  (onClick)="cancel()">
+                  (click)="cancel()">
             Cancel
           </button>
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
+</myWindow>

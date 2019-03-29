@@ -14,7 +14,8 @@
                 <app-lesson [event]="selectedEvent"
                             [lesson]="selectedLesson"
                             (onSave)="saveClass()"
-                            (onCancel)="cancelSaveClass()"></app-lesson>
+                            (onCancel)="cancelSaveClass()"
+                (onClone)="cloneClass()"></app-lesson>
               </div>
             </div>
           </ng-template>

@@ -21,9 +21,7 @@
       <div class="btn-group" role="group">
         <button ngbButton
                 class="btn btn-primary"
-                placement="bottom"
-                container="body"
-                [ngbPopover]="cloneDatesPopupContent">
+                (click)="cloneButtonClick()">
           Clone this class
         </button>
         <button ngbButton
@@ -37,17 +35,7 @@
     </div>
   </div>
 
-  <div class="row align-items-center mb-4">
-    <!--<div class="col-auto">-->
-    <!--<span class="h6 mr-3">Client:</span>-->
-    <!--<div ngbDropdown *ngIf="(clients$ | async) as clients; else loading" class="d-inline-block">-->
-    <!--<button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Select client</button>-->
-    <!--<div ngbDropdownMenu aria-labelledby="dropdownBasic2">-->
-    <!--<button *ngFor="let client of clients" class="dropdown-item">{{client.name}}</button>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
+  <div class="row align-items-center mb-1">
     <div class="col-auto">
       <span class="h6 mr-3">Class type:</span>
       <myDropdown class="d-inline-block"
@@ -56,19 +44,38 @@
                   [displayFunc]="displayClassType"
       ></myDropdown>
     </div>
-
-    <div class="col-auto">
-      <span class="h6 mr-3">From:</span>
-      <myTimePicker class="d-inline-block" [(ngModel)]="selectedLesson.startTime"></myTimePicker>
-    </div>
-
-    <div class="col-auto">
-      <span class="h6 mr-3">To:</span>
-      <myTimePicker class="d-inline-block" [(ngModel)]="selectedLesson.endTime"></myTimePicker>
-    </div>
-
-
   </div>
+
+  <div class="row align-items-center mb-1">
+    <div class="col-auto">
+      <span class="h6 mr-3">Date:</span>
+      <form class="form-inline d-inline-block">
+        <div class="form-group">
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+                   name="d2" #c2="ngModel"
+                   [ngModel]="selectedLesson.startTime"
+                   (ngModelChange)="setStartDate($event)"
+                   ngbDatepicker
+                   #d2="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row align-items-center mb-4">
+    <div class="col-auto">
+      <span class="h6 mr-3">Time:</span>
+      <myTimePicker class="d-inline-block"
+                    [ngModel]="selectedLesson.startTime"
+                    (ngModelChange)="setStartTime($event)"></myTimePicker>
+    </div>
+  </div>
+
 
   <div class="row justify-content-center mb-1" *ngIf="lessonStudents; else loading">
     <div class="col">
@@ -85,7 +92,7 @@
           <td style="text-align: center" [ngClass]="{disable: !student.isActive}">
             <!--<input type="checkbox" [ngModel]="true" ngbButton>-->
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="student{{i}}" [ngModel]="student.isVisited">
+              <input type="checkbox" class="custom-control-input" id="student{{i}}" [(ngModel)]="student.isVisited">
               <label class="custom-control-label" for="student{{i}}"></label>
             </div>
             <!--<myCheckbox [ngModel]="true"></myCheckbox>-->
@@ -129,6 +136,7 @@
     <div class="col-auto align-content-center">
       <myDropdown [(ngModel)]="newStudent"
                   [source]="availableStudents"
+                  [placeHolder]="'Select student'"
                   [displayFunc]="displayStudent"></myDropdown>
     </div>
     <div class="col-auto">
@@ -153,10 +161,37 @@
   <app-loading></app-loading>
 </ng-template>
 
-<ng-template #cloneDatesPopupContent>
-  <ngb-datepicker></ngb-datepicker>
-</ng-template>
-
 <ng-template #askSubstitutionPopupContent>
   <ngb-datepicker></ngb-datepicker>
 </ng-template>
+
+<confirm-window #cloneConfirmWindow (onOk)="cloneLessonConfirmed()">
+  <ng-container *ngIf="cloneDates as range">
+    <span>
+    You are attempting to clone class '{{selectedEvent.title}}' to these {{range.length}} days:
+      <ul>
+        <li *ngFor="let d of range">{{d | date:'dd/MM/yyyy'}}</li>
+      </ul>
+    Do you proceed?
+      </span>
+  </ng-container>
+</confirm-window>
+
+<myWindow #cloneDatesSelectWindow>
+
+  <div class="row mb-2 justify-content-center">
+    <div class="col-auto">
+      <myDatepickerMultiple #cloneDp></myDatepickerMultiple>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <button ngbButton
+              class="btn btn-primary text-uppercase"
+              [disabled]="!cloneDp.selectedDates.length"
+              (click)="cloneSelectedDates(cloneDp.selectedDates)">
+        Clone
+      </button>
+    </div>
+  </div>
+</myWindow>

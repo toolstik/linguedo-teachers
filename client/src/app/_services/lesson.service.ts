@@ -29,6 +29,14 @@ export class LessonService {
     });
   }
 
+  cloneTeacherLesson(lesson: LessonDto, lessonStudents: LessonStudentDto[], dates: Date[]) {
+    return this.jsonp.exec(this.resource, 'clone', {
+      lesson: lesson,
+      students: lessonStudents,
+      dates: dates
+    });
+  }
+
   getStudents(lessonId: string) {
     return this.jsonp.exec<LessonStudentDto[]>(this.resource, 'getStudents', lessonId);
   }
