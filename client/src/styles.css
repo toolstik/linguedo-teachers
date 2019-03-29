@@ -8,3 +8,9 @@
 .popover{
   max-width: 50% !important;
 }
+
+/*.modal-dialog {*/
+  /*max-width: 100%;*/
+  /*width: auto !important;*/
+  /*display: inline-block;*/
+/*}*/

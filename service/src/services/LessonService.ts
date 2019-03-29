@@ -81,6 +81,15 @@ export class LessonService {
     }
 
     cloneTeacherLesson(lesson: LessonDto, students: LessonStudentDto[], dates: Date[]) {
+
+        const newStudents = clone(students)
+            .filter(s => s.isActive)
+            .map(s => {
+                s.isVisited = true;
+                return s;
+            });
+
+
         for (let d of dates) {
             const newLesson: LessonDto = {
                 ...lesson,
@@ -89,7 +98,7 @@ export class LessonService {
                 endTime: this.changeDate(lesson.endTime, d),
             };
 
-            this.saveTeacherLesson(newLesson, students);
+            this.saveTeacherLesson(newLesson, newStudents);
         }
     }
 }

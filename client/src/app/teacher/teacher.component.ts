@@ -5,9 +5,7 @@ import {LessonService} from "../_services/lesson.service";
 import {EventObject} from "fullcalendar";
 import {TeacherDto} from "../../../../shared/transfer/TeacherDto";
 import {ClassTypeService} from "../_services/class-type.service";
-import {ClassTypeDto} from "../../../../shared/transfer/ClassTypeDto";
 import {ClientService} from "../_services/client.service";
-import {ClientDto} from "../../../../shared/transfer/ClientDto";
 import {AuthService} from "../_services/auth.service";
 import {UserDto} from "../../../../shared/transfer/UserDto";
 import {StudentService} from "../_services/student.service";
@@ -92,10 +90,19 @@ export class TeacherComponent implements OnInit {
   }
 
   calendarSelect(event: { start: Moment, end: Moment }) {
-    // console.log(event);
     this.selectedEvent = {title: 'New Lesson'} as EventObject;
     this.selectedLesson = {} as LessonDto;
     this.selectedLesson.startTime = event.start.toDate();
     this.selectedLesson.endTime = event.end.toDate();
+  }
+
+  cloneClass() {
+    this.lessons = null;
+    this.events = null;
+
+    this.selectedLesson = null;
+    this.selectedEvent = null;
+
+    this.getLessons();
   }
 }

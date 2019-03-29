@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {LessonDto} from "../../../../../shared/transfer/LessonDto";
 import {EventObject} from "fullcalendar";
 import {LessonService} from "../../_services/lesson.service";
@@ -9,9 +9,7 @@ import {StudentDto} from "../../../../../shared/transfer/StudentDto";
 import {TeacherService} from "../../_services/teacher.service";
 import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDto";
 import {ConfirmWindowComponent} from "../../common/confirm-window/confirm-window.component";
-import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
-
-type DateRange = { fromDate: Date, toDate: Date };
+import {WindowComponent} from "../../common/window/window.component";
 
 @Component({
   selector: 'app-lesson',
@@ -30,10 +28,11 @@ export class LessonComponent implements OnInit {
   }
 
   @Output() onSave = new EventEmitter();
+  @Output() onClone = new EventEmitter();
   @Output() onCancel = new EventEmitter();
 
   @ViewChild('cloneConfirmWindow') cloneConfirmWindow: ConfirmWindowComponent;
-  @ViewChild('cloneDatesPopover') cloneDatesPopover: NgbPopover;
+  @ViewChild('cloneDatesSelectWindow') cloneDatesSelectWindow: WindowComponent;
 
   selectedEvent: EventObject;
   selectedLesson: LessonDto;
@@ -44,7 +43,7 @@ export class LessonComponent implements OnInit {
   loadingEnabled = false;
   teacherStudents: StudentTeacherDto[];
 
-  cloneRange: DateRange;
+  cloneDates: Date[];
 
   constructor(private lessonService: LessonService,
               private classTypeService: ClassTypeService,
@@ -159,33 +158,21 @@ export class LessonComponent implements OnInit {
 
   }
 
-  cloneRangeSelected(range: DateRange) {
-    this.cloneRange = range;
-    this.cloneDatesPopover.close();
+  cloneSelectedDates(range: Date[]) {
+    this.cloneDates = range;
+    this.cloneDatesSelectWindow.close('CLONE');
     this.cloneConfirmWindow.open();
   }
 
-  get cloneRangeArray() {
-    if (!this.cloneRange)
-      return null;
-
-    const result: Date[] = [];
-
-    let i = new Date(this.cloneRange.fromDate);
-
-    while (i <= this.cloneRange.toDate) {
-      result.push(i);
-      i = new Date(i);
-      i.setDate(i.getDate() + 1);
-    }
-
-    return result;
+  cloneLessonConfirmed() {
+    this.lessonService
+      .cloneTeacherLesson(this.selectedLesson, this.lessonStudents, this.cloneDates)
+      .subscribe(() => {
+        this.onClone.next();
+      });
   }
 
-  cloneLessonConfirmed() {
-    console.log('confirm');
-    this.lessonService
-      .cloneTeacherLesson(this.selectedLesson, this.lessonStudents, this.cloneRangeArray)
-      .subscribe();
+  cloneButtonClick() {
+    this.cloneDatesSelectWindow.open();
   }
 }

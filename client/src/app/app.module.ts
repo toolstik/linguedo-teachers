@@ -18,6 +18,8 @@ import { LoadingComponent } from './common/loading/loading.component';
 import { DropdownComponent } from './common/dropdown/dropdown.component';
 import { DatepickerRangeComponent } from './common/datepicker-range/datepicker-range.component';
 import { AlertComponent } from './alert/alert.component';
+import { DatepickerMultipleComponent } from './common/datepicker-multiple/datepicker-multiple.component';
+import { WindowComponent } from './common/window/window.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { AlertComponent } from './alert/alert.component';
     LoadingComponent,
     DropdownComponent,
     DatepickerRangeComponent,
-    AlertComponent
+    AlertComponent,
+    DatepickerMultipleComponent,
+    WindowComponent
   ],
   imports: [
     BrowserModule,

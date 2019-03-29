@@ -1,47 +1,36 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {WindowComponent} from "../window/window.component";
 
 @Component({
   selector: 'confirm-window',
   templateUrl: './confirm-window.component.html',
   styleUrls: ['./confirm-window.component.css']
 })
-export class ConfirmWindowComponent implements OnInit, OnDestroy {
+export class ConfirmWindowComponent implements OnInit {
 
-  @ViewChild('myWindow') myWindow: TemplateRef<any>;
+  @ViewChild('myWindow') private myWindow: WindowComponent;
 
   @Output() onOk = new EventEmitter();
   @Output() onCancel = new EventEmitter();
 
-  private modalRef: NgbModalRef;
-
-  constructor(private modalService: NgbModal) {
+  constructor() {
   }
 
   ngOnInit() {
   }
 
-  ngOnDestroy(): void {
-    this.modalService.dismissAll();
-  }
-
   open() {
-    this.modalRef = this.modalService.open(this.myWindow, {centered: true});
-  }
-
-  close(reason?) {
-    if (this.modalRef)
-      this.modalRef.close(reason);
+    this.myWindow.open();
   }
 
   ok() {
     this.onOk.next();
-    this.close('OK');
+    this.myWindow.close('OK');
   }
 
   cancel() {
     this.onCancel.next();
-    this.close('CANCEL');
+    this.myWindow.close('CANCEL');
   }
 
 }

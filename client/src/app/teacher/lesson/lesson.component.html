@@ -21,11 +21,7 @@
       <div class="btn-group" role="group">
         <button ngbButton
                 class="btn btn-primary"
-                placement="bottom"
-                container="body"
-                [autoClose]="'outside'"
-                #cloneDatesPopover="ngbPopover"
-                [ngbPopover]="cloneDatesPopupContent">
+               (click)="cloneButtonClick()">
           Clone this class
         </button>
         <button ngbButton
@@ -155,18 +151,14 @@
   <app-loading></app-loading>
 </ng-template>
 
-<ng-template #cloneDatesPopupContent>
-  <myDatepickerRange (onRangeSelected)="cloneRangeSelected($event)"></myDatepickerRange>
-</ng-template>
-
 <ng-template #askSubstitutionPopupContent>
   <ngb-datepicker></ngb-datepicker>
 </ng-template>
 
 <confirm-window #cloneConfirmWindow (onOk)="cloneLessonConfirmed()">
-  <ng-container *ngIf="cloneRangeArray as range">
+  <ng-container *ngIf="cloneDates as range">
     <span>
-    You are attempting to clone class {{selectedEvent.title}} to these {{range.length}} days:
+    You are attempting to clone class '{{selectedEvent.title}}' to these {{range.length}} days:
       <ul>
         <li *ngFor="let d of range">{{d | date:'dd/MM/yyyy'}}</li>
       </ul>
@@ -174,3 +166,22 @@
       </span>
   </ng-container>
 </confirm-window>
+
+<myWindow #cloneDatesSelectWindow>
+
+    <div class="row mb-2 justify-content-center">
+      <div class="col-auto">
+        <myDatepickerMultiple #cloneDp></myDatepickerMultiple>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <button ngbButton
+                class="btn btn-primary text-uppercase"
+                [disabled]="!cloneDp.selectedDates.length"
+                (click)="cloneSelectedDates(cloneDp.selectedDates)">
+          Clone
+        </button>
+      </div>
+    </div>
+</myWindow>
