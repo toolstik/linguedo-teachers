@@ -16,4 +16,10 @@ class SubstitutionResource {
     create(substitution: SubstitutionDto) {
         return new SubstitutionService().create(substitution);
     }
+
+    @requestMapping('selfRequested')
+    @preAuthorize(['teacher'])
+    selfRequested() {
+        return new SubstitutionService().selfRequested();
+    }
 }

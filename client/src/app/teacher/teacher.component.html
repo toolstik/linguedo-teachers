@@ -15,7 +15,7 @@
                             [lesson]="selectedLesson"
                             (onSave)="saveClass()"
                             (onCancel)="cancelSaveClass()"
-                (onClone)="cloneClass()"></app-lesson>
+                            (onClone)="cloneClass()"></app-lesson>
               </div>
             </div>
           </ng-template>
@@ -32,7 +32,9 @@
           </ng-template>
         </ngb-tab>
         <ngb-tab>
-          <ng-template ngbTabTitle>My requested substitutions <span class="badge badge-primary">1</span></ng-template>
+          <ng-template ngbTabTitle>My requested substitutions <span
+            *ngIf="requestedSubstitutions && requestedSubstitutions.length" class="badge badge-primary">{{requestedSubstitutions.length}}</span>
+          </ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
               <div class="col-xl">
@@ -147,28 +149,30 @@
 </ng-template>
 
 <ng-template #substitutionRequests>
-  <div class="table-responsive">
+  <div *ngIf="requestedSubstitutions; else loading" class="table-responsive">
     <table class="table table-striped">
       <thead>
       <th>Date</th>
-      <th>Client</th>
       <th>Class type</th>
+      <th>Teacher</th>
       <th>Status</th>
       </thead>
       <tbody>
-      <tr>
+      <tr *ngFor="let sub of requestedSubstitutions">
         <!--<th scope="row">{{ i + 1 }}</th>-->
         <td>
-          12 April 2019 at 1:30 PM
+          {{sub.lesson.startTime | date:'d MMMM y h:mm a'}}
+          <!--12 April 2019 at 1:30 PM-->
         </td>
         <td>
-          Client 1
+          {{sub.lesson.classType.name}}
         </td>
         <td>
-          Normal lesson 90 Min
+          {{sub.toTeacher.firstName}} {{sub.toTeacher.lastName}}
         </td>
         <td>
-          <span class="text-info">Pending</span>
+          {{sub.status}}
+          <!--<span class="text-info">Pending</span>-->
         </td>
       </tr>
       </tbody>

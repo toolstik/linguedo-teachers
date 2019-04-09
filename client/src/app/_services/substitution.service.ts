@@ -25,4 +25,8 @@ export class SubstitutionService {
   create(sub: SubstitutionDto) {
     return this.jsonp.exec(this.resource, 'create', sub);
   }
+
+  getSelfRequested() {
+    return this.jsonp.exec<SubstitutionDto[]>(this.resource, 'selfRequested');
+  }
 }

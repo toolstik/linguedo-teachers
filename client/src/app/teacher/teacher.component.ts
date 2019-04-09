@@ -12,6 +12,8 @@ import {StudentService} from "../_services/student.service";
 import {StudentDto} from "../../../../shared/transfer/StudentDto";
 import {LessonDto} from "../../../../shared/transfer/LessonDto";
 import {Moment} from "moment";
+import {SubstitutionService} from "../_services/substitution.service";
+import {SubstitutionDto} from "../../../../shared/transfer/SubstitutionDto";
 
 @Component({
   selector: 'app-teacher',
@@ -20,32 +22,22 @@ import {Moment} from "moment";
 })
 export class TeacherComponent implements OnInit {
 
-  teachers$: Observable<TeacherDto[]>;
-  students$: Observable<StudentDto[]>;
-  // clients$: Observable<ClientDto[]>;
+  requestedSubstitutions: SubstitutionDto[];
 
   lessons: LessonDto[];
   events: EventObject[];
-
-  currentUser$: Observable<UserDto>;
 
   selectedLesson: LessonDto;
   selectedEvent: EventObject;
 
   constructor(private teacherService: TeacherService,
-              private studentService: StudentService,
-              private authService: AuthService,
-              private classTypeService: ClassTypeService,
-              private clientService: ClientService,
-              private lessonService: LessonService) {
+              private lessonService: LessonService,
+              private substitutionService: SubstitutionService) {
   }
 
   ngOnInit() {
-    this.teachers$ = this.teacherService.getAll();
-    this.students$ = this.studentService.getAll();
-    this.currentUser$ = this.authService.currentUser();
-
     this.getLessons();
+    this.getRequestedSubstitutions();
   }
 
   private getLessons() {
@@ -67,6 +59,13 @@ export class TeacherComponent implements OnInit {
         }
       })
     });
+  }
+
+  private getRequestedSubstitutions() {
+    this.substitutionService.getSelfRequested()
+      .subscribe(data => {
+        this.requestedSubstitutions = data;
+      });
   }
 
   private clone<T>(obj: T): T {
