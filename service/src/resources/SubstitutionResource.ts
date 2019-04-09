@@ -17,9 +17,27 @@ class SubstitutionResource {
         return new SubstitutionService().create(substitution);
     }
 
-    @requestMapping('selfRequested')
+    @requestMapping('accept')
     @preAuthorize(['teacher'])
-    selfRequested() {
-        return new SubstitutionService().selfRequested();
+    accept(substitution: SubstitutionDto) {
+        return new SubstitutionService().accept(substitution);
+    }
+
+    @requestMapping('decline')
+    @preAuthorize(['teacher'])
+    decline(substitution: SubstitutionDto) {
+        return new SubstitutionService().decline(substitution);
+    }
+
+    @requestMapping('outgoing')
+    @preAuthorize(['teacher'])
+    outgoing() {
+        return new SubstitutionService().getOutgoing();
+    }
+
+    @requestMapping('incoming')
+    @preAuthorize(['teacher'])
+    incoming() {
+        return new SubstitutionService().getIncoming();
     }
 }

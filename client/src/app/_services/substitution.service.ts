@@ -26,7 +26,19 @@ export class SubstitutionService {
     return this.jsonp.exec(this.resource, 'create', sub);
   }
 
-  getSelfRequested() {
-    return this.jsonp.exec<SubstitutionDto[]>(this.resource, 'selfRequested');
+  getOutgoing() {
+    return this.jsonp.exec<SubstitutionDto[]>(this.resource, 'outgoing');
+  }
+
+  getIncoming() {
+    return this.jsonp.exec<SubstitutionDto[]>(this.resource, 'incoming');
+  }
+
+  accept(sub:SubstitutionDto){
+    return this.jsonp.exec(this.resource, 'accept', sub);
+  }
+
+  decline(sub:SubstitutionDto){
+    return this.jsonp.exec(this.resource, 'decline', sub);
   }
 }

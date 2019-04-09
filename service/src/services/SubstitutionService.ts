@@ -4,7 +4,7 @@ import {TeacherDto} from '../../../shared/transfer/TeacherDto';
 import {LessonDto} from "../../../shared/transfer/LessonDto";
 import {LessonService} from "./LessonService";
 import {CalendarService} from "./CalendarService";
-import {SubstitutionDto} from "../../../shared/transfer/SubstitutionDto";
+import {SubstitutionDto, SubstitutionStatus} from "../../../shared/transfer/SubstitutionDto";
 
 export class SubstitutionService {
 
@@ -31,7 +31,7 @@ export class SubstitutionService {
 
     private save(substitution: SubstitutionDto) {
         let itemToSave =
-            this.model.lesson.findOne({
+            this.model.substitution.findOne({
                 lesson: substitution.lesson.id,
                 fromTeacher: substitution.fromTeacher.id,
                 toTeacher: substitution.toTeacher.id,
@@ -50,13 +50,23 @@ export class SubstitutionService {
         this.model.substitution.save(itemToSave);
     }
 
-    selfRequested() {
+    getOutgoing() {
         const user = AuthService.getCurrentUser();
 
         if (!user)
             return [];
 
         return this.model.substitution.find({fromTeacher: user.id})
+            .map(this.fillEntity);
+    }
+
+    getIncoming() {
+        const user = AuthService.getCurrentUser();
+
+        if (!user)
+            return [];
+
+        return this.model.substitution.find({toTeacher: user.id, status: 'PENDING'})
             .map(this.fillEntity);
     }
 
@@ -68,6 +78,13 @@ export class SubstitutionService {
     accept(substitution: SubstitutionDto) {
         substitution.status = "ACCEPTED";
         this.save(substitution);
+
+        const lesson = {
+            ...substitution.lesson,
+            teacher: substitution.toTeacher
+        };
+
+        this.lessonService.saveTeacherLesson(lesson);
     }
 
     decline(substitution: SubstitutionDto) {

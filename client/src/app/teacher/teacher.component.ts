@@ -22,7 +22,8 @@ import {SubstitutionDto} from "../../../../shared/transfer/SubstitutionDto";
 })
 export class TeacherComponent implements OnInit {
 
-  requestedSubstitutions: SubstitutionDto[];
+  outgoingSubstitutions: SubstitutionDto[];
+  incomingSubstitutions: SubstitutionDto[];
 
   lessons: LessonDto[];
   events: EventObject[];
@@ -37,10 +38,14 @@ export class TeacherComponent implements OnInit {
 
   ngOnInit() {
     this.getLessons();
-    this.getRequestedSubstitutions();
+    this.getOutgoingSubstitutions();
+    this.getIncomingSubstitutions();
   }
 
   private getLessons() {
+    this.lessons = null;
+    this.events = null;
+
     this.lessonService.getByCurrentTeacher().subscribe(data => {
       this.lessons = data.map(l => {
         l.startTime = new Date(l.startTime);
@@ -61,10 +66,17 @@ export class TeacherComponent implements OnInit {
     });
   }
 
-  private getRequestedSubstitutions() {
-    this.substitutionService.getSelfRequested()
+  private getOutgoingSubstitutions() {
+    this.substitutionService.getOutgoing()
       .subscribe(data => {
-        this.requestedSubstitutions = data;
+        this.outgoingSubstitutions = data;
+      });
+  }
+
+  private getIncomingSubstitutions() {
+    this.substitutionService.getIncoming()
+      .subscribe(data => {
+        this.incomingSubstitutions = data;
       });
   }
 
@@ -78,9 +90,6 @@ export class TeacherComponent implements OnInit {
   }
 
   saveClass() {
-    this.lessons = null;
-    this.events = null;
-
     this.selectedLesson = null;
     this.selectedEvent = null;
 
@@ -107,5 +116,21 @@ export class TeacherComponent implements OnInit {
     this.selectedEvent = null;
 
     this.getLessons();
+  }
+
+  acceptSubstitution(sub: SubstitutionDto) {
+    this.incomingSubstitutions = null;
+    this.substitutionService.accept(sub).subscribe(() => {
+      this.getIncomingSubstitutions();
+      this.getLessons();
+    })
+  }
+
+  declineSubstitution(sub: SubstitutionDto) {
+    this.incomingSubstitutions = null;
+    this.substitutionService.decline(sub).subscribe(() => {
+      this.getIncomingSubstitutions();
+    })
+
   }
 }

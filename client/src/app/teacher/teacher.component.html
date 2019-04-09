@@ -21,7 +21,8 @@
           </ng-template>
         </ngb-tab>
         <ngb-tab>
-          <ng-template ngbTabTitle>Substitution requests by other teachers <span class="badge badge-primary">2</span>
+          <ng-template ngbTabTitle>Substitution requests by other teachers <span *ngIf="incomingSubstitutions?.length"
+                                                                                 class="badge badge-primary">{{incomingSubstitutions.length}}</span>
           </ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
@@ -33,7 +34,7 @@
         </ngb-tab>
         <ngb-tab>
           <ng-template ngbTabTitle>My requested substitutions <span
-            *ngIf="requestedSubstitutions && requestedSubstitutions.length" class="badge badge-primary">{{requestedSubstitutions.length}}</span>
+            *ngIf="outgoingSubstitutions?.length" class="badge badge-primary">{{outgoingSubstitutions.length}}</span>
           </ng-template>
           <ng-template ngbTabContent>
             <div class="row mt-2">
@@ -83,64 +84,39 @@
 </ng-template>
 
 <ng-template #substitutionProposals>
-  <div class="table-responsive">
+  <div *ngIf="incomingSubstitutions; else loading" class="table-responsive">
     <table class="table table-striped">
       <thead>
-      <th>From teacher</th>
-      <th>Client</th>
-      <th>Class type</th>
       <th>Date</th>
+      <th>From teacher</th>
+      <th>Class type</th>
       <th></th>
       </thead>
       <tbody>
-      <tr>
-        <!--<th scope="row">{{ i + 1 }}</th>-->
+      <tr *ngFor="let sub of incomingSubstitutions">
         <td>
-          Grand Master Yoda
-        </td>
-        <td>
-          Client 1
+          {{sub.lesson.startTime | date:'d MMMM y h:mm a'}}
         </td>
         <td>
-          Normal lesson 90 Min
+          {{sub.fromTeacher.firstName}} {{sub.fromTeacher.lastName}}
         </td>
         <td>
-          12 April 2019 at 1:30 PM
+          {{sub.lesson.classType.name}}
         </td>
-        <td class="btn-group">
-          <button ngbButton
-                  class="btn btn-primary">
-            Apply
-          </button>
-          <button ngbButton
-                  class="btn btn-outline-danger">
-            Decline
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <!--<th scope="row">{{ i + 1 }}</th>-->
-        <td>
-          Obi-Wan Kenobi
-        </td>
-        <td>
-          Client 2
-        </td>
-        <td>
-          Conversation class 60 Min
-        </td>
-        <td>
-          29 March 2019 at 9:00 AM
-        </td>
-        <td class="btn-group">
-          <button ngbButton
-                  class="btn btn-primary">
-            Apply
-          </button>
-          <button ngbButton
-                  class="btn btn-outline-danger">
-            Decline
-          </button>
+        <td [ngSwitch]="sub.status">
+          <div class="btn-group" *ngSwitchCase="'PENDING'">
+            <button ngbButton
+                    class="btn btn-primary"
+                    (click)="acceptSubstitution(sub)">
+              Accept
+            </button>
+            <button ngbButton
+                    class="btn btn-outline-danger"
+                    (click)="declineSubstitution(sub)">
+              Decline
+            </button>
+          </div>
+          <span *ngSwitchDefault>{{sub.status}}</span>
         </td>
       </tr>
       </tbody>
@@ -149,7 +125,7 @@
 </ng-template>
 
 <ng-template #substitutionRequests>
-  <div *ngIf="requestedSubstitutions; else loading" class="table-responsive">
+  <div *ngIf="outgoingSubstitutions; else loading" class="table-responsive">
     <table class="table table-striped">
       <thead>
       <th>Date</th>
@@ -158,7 +134,7 @@
       <th>Status</th>
       </thead>
       <tbody>
-      <tr *ngFor="let sub of requestedSubstitutions">
+      <tr *ngFor="let sub of outgoingSubstitutions">
         <!--<th scope="row">{{ i + 1 }}</th>-->
         <td>
           {{sub.lesson.startTime | date:'d MMMM y h:mm a'}}
