@@ -3,6 +3,7 @@ import {MyJsonpService} from "./my-jsonp.service";
 import {TeacherDto} from "../../../../shared/transfer/TeacherDto";
 import {ReplaySubject} from "rxjs";
 import {StudentTeacherDto} from "../../../../shared/transfer/StudentTeacherDto";
+import {LessonDto} from "../../../../shared/transfer/LessonDto";
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,9 @@ export class TeacherService {
 
   getStudents() {
     return this.jsonp.exec<StudentTeacherDto[]>(this.resource, 'students');
+  }
+
+  getTeachersForLesson(lesson: LessonDto) {
+    return this.jsonp.exec<TeacherDto[]>(this.resource, 'teachersForLesson', lesson);
   }
 }

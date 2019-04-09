@@ -11,6 +11,7 @@ import {StudentTeacherDto} from "../../../../../shared/transfer/StudentTeacherDt
 import {ConfirmWindowComponent} from "../../common/confirm-window/confirm-window.component";
 import {WindowComponent} from "../../common/window/window.component";
 import {NgbDateAdapter, NgbDateNativeAdapter} from "@ng-bootstrap/ng-bootstrap";
+import {TeacherDto} from "../../../../../shared/transfer/TeacherDto";
 
 @Component({
   selector: 'app-lesson',
@@ -35,6 +36,7 @@ export class LessonComponent implements OnInit {
 
   @ViewChild('cloneConfirmWindow') cloneConfirmWindow: ConfirmWindowComponent;
   @ViewChild('cloneDatesSelectWindow') cloneDatesSelectWindow: WindowComponent;
+  @ViewChild('substitutionWindow') substitutionWindow: WindowComponent;
 
   selectedEvent: EventObject;
   selectedLesson: LessonDto;
@@ -44,6 +46,9 @@ export class LessonComponent implements OnInit {
   addStudentActive = false;
   loadingEnabled = false;
   teacherStudents: StudentTeacherDto[];
+
+  substitutionTeacher: TeacherDto;
+  substitutionAvailableTeachers: TeacherDto[];
 
   cloneDates: Date[];
 
@@ -61,6 +66,7 @@ export class LessonComponent implements OnInit {
   }
 
   displayStudent = (x: StudentDto) => `${x.firstName} ${x.lastName}`;
+  displayTeacher = (x: TeacherDto) => `${x.firstName} ${x.lastName}`;
   displayClassType = (x: ClassTypeDto) => x.name;
 
   get availableStudents() {
@@ -82,6 +88,7 @@ export class LessonComponent implements OnInit {
       })
       .map(s => s.student);
   }
+
 
   getStudents() {
     this.lessonStudents = null;
@@ -108,6 +115,14 @@ export class LessonComponent implements OnInit {
     this.teacherService.getStudents()
       .subscribe(data => {
         this.teacherStudents = data;
+      });
+  }
+
+  getSubstitutionTeachers(lesson: LessonDto) {
+    this.substitutionAvailableTeachers = null;
+    this.teacherService.getTeachersForLesson(lesson)
+      .subscribe(data => {
+        this.substitutionAvailableTeachers = data;
       });
   }
 
@@ -191,5 +206,10 @@ export class LessonComponent implements OnInit {
       this.selectedLesson.startTime = new Date();
 
     this.selectedLesson.startTime.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+  }
+
+  askSubstitutionButtonClick() {
+    this.getSubstitutionTeachers(this.selectedLesson);
+    this.substitutionWindow.open();
   }
 }

@@ -16,7 +16,7 @@ export class LessonService {
     ) {
     }
 
-    fillEntity = (l: any) => {
+    private fillEntity = (l: LessonDto) => {
         return {
             ...l,
             teacher: this.model.teacher.findOne({id: l.teacher}),
@@ -24,8 +24,17 @@ export class LessonService {
             // students: this.model.lessonStudent
             //     .find({ lesson: l.id })
             //     .map(s => this.model.student.findOne({ id: s.student }))
-        }
+        } as LessonDto;
     };
+
+    getById(id: string) {
+        const result = this.model.lesson.findOne({id: id}) as LessonDto;
+
+        if (!result)
+            return null;
+
+        return this.fillEntity(result);
+    }
 
     getAll() {
         return this.model.lesson.findAll()

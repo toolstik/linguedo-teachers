@@ -1,11 +1,11 @@
 var ts2gas = require('ts2gas');
 
-module.exports = function (grunt) {
+var deployments = {
+    client: 'AKfycbwlsZiyzgpdfU8b2fCyYHr8pZW61_1lULFwuw3lJLUKxdnD4CY',
+    service: 'AKfycbyBWAfpsxwPkcEotlivyAfiap8FgODlS3j7Eq8F8tAUtM8Kv7OH'
+};
 
-    var deployments = {
-        client: 'AKfycbwlsZiyzgpdfU8b2fCyYHr8pZW61_1lULFwuw3lJLUKxdnD4CY',
-        service: 'AKfycbyBWAfpsxwPkcEotlivyAfiap8FgODlS3j7Eq8F8tAUtM8Kv7OH'
-    };
+module.exports = function (grunt) {
 
     function trinspileTs(tsFile, config) {
         var ts2gasConfig = grunt.file.readJSON(config).compilerOptions;

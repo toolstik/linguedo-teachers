@@ -26,9 +26,7 @@
         </button>
         <button ngbButton
                 class="btn btn-primary"
-                placement="bottom"
-                container="body"
-                [ngbPopover]="askSubstitutionPopupContent">
+                (click)="askSubstitutionButtonClick()">
           Ask substitution for this class
         </button>
       </div>
@@ -176,6 +174,27 @@
       </span>
   </ng-container>
 </confirm-window>
+
+<myWindow #substitutionWindow>
+  <div class="row mb-2 justify-content-center">
+    <div class="col-auto">
+      <myDropdown [(ngModel)]="substitutionTeacher"
+                  [source]="substitutionAvailableTeachers"
+                  [placeHolder]="'Select teacher'"
+                  [displayFunc]="displayTeacher"></myDropdown>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <button ngbButton
+              class="btn btn-primary text-uppercase"
+              [disabled]="!cloneDp.selectedDates.length"
+              (click)="cloneSelectedDates(cloneDp.selectedDates)">
+        Clone
+      </button>
+    </div>
+  </div>
+</myWindow>
 
 <myWindow #cloneDatesSelectWindow>
 
