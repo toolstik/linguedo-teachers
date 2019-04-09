@@ -12,6 +12,8 @@ import {ConfirmWindowComponent} from "../../common/confirm-window/confirm-window
 import {WindowComponent} from "../../common/window/window.component";
 import {NgbDateAdapter, NgbDateNativeAdapter} from "@ng-bootstrap/ng-bootstrap";
 import {TeacherDto} from "../../../../../shared/transfer/TeacherDto";
+import {SubstitutionService} from "../../_services/substitution.service";
+import {SubstitutionDto} from "../../../../../shared/transfer/SubstitutionDto";
 
 @Component({
   selector: 'app-lesson',
@@ -54,7 +56,8 @@ export class LessonComponent implements OnInit {
 
   constructor(private lessonService: LessonService,
               private classTypeService: ClassTypeService,
-              private teacherService: TeacherService) {
+              private teacherService: TeacherService,
+              private substitutionService: SubstitutionService) {
   }
 
   ngOnInit() {
@@ -211,5 +214,18 @@ export class LessonComponent implements OnInit {
   askSubstitutionButtonClick() {
     this.getSubstitutionTeachers(this.selectedLesson);
     this.substitutionWindow.open();
+  }
+
+  submitSubstitution() {
+    const sub: SubstitutionDto = {
+      lesson: this.selectedLesson,
+      fromTeacher: this.selectedLesson.teacher,
+      toTeacher: this.substitutionTeacher,
+      status: "PENDING"
+    };
+
+    this.substitutionService.create(sub).subscribe(() => {
+      this.substitutionWindow.close();
+    });
   }
 }

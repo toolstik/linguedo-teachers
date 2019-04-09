@@ -54,4 +54,8 @@ export class Model {
     get project() {
         return this.model.getRepository('project');
     }
+
+    get substitution() {
+        return this.model.getRepository('substitution');
+    }
 }

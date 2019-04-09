@@ -176,24 +176,31 @@
 </confirm-window>
 
 <myWindow #substitutionWindow>
-  <div class="row mb-2 justify-content-center">
-    <div class="col-auto">
-      <myDropdown [(ngModel)]="substitutionTeacher"
-                  [source]="substitutionAvailableTeachers"
-                  [placeHolder]="'Select teacher'"
-                  [displayFunc]="displayTeacher"></myDropdown>
+  <ng-container *ngIf="substitutionAvailableTeachers; else loading">
+    <div class="row mb-2 justify-content-center">
+      <div class="col-auto">
+        <myDropdown [(ngModel)]="substitutionTeacher"
+                    [source]="substitutionAvailableTeachers"
+                    [placeHolder]="'Select teacher'"
+                    [displayFunc]="displayTeacher"></myDropdown>
+      </div>
     </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-auto">
-      <button ngbButton
-              class="btn btn-primary text-uppercase"
-              [disabled]="!cloneDp.selectedDates.length"
-              (click)="cloneSelectedDates(cloneDp.selectedDates)">
-        Clone
-      </button>
+    <div *ngIf="substitutionTeacher" class="row mb-2 justify-content-center">
+      <div class="col-auto">
+        <span>{{substitutionTeacher.firstName}} {{substitutionTeacher.lastName}} will be asked for substitution</span>
+      </div>
     </div>
-  </div>
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <button ngbButton
+                class="btn btn-primary text-uppercase"
+                [disabled]="!substitutionTeacher"
+                (click)="submitSubstitution()">
+          Propose Substitution
+        </button>
+      </div>
+    </div>
+  </ng-container>
 </myWindow>
 
 <myWindow #cloneDatesSelectWindow>
