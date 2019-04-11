@@ -1,15 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TeacherService} from "../_services/teacher.service";
-import {Observable} from "rxjs";
 import {LessonService} from "../_services/lesson.service";
 import {EventObject} from "fullcalendar";
-import {TeacherDto} from "../../../../shared/transfer/TeacherDto";
-import {ClassTypeService} from "../_services/class-type.service";
-import {ClientService} from "../_services/client.service";
-import {AuthService} from "../_services/auth.service";
-import {UserDto} from "../../../../shared/transfer/UserDto";
-import {StudentService} from "../_services/student.service";
-import {StudentDto} from "../../../../shared/transfer/StudentDto";
 import {LessonDto} from "../../../../shared/transfer/LessonDto";
 import {Moment} from "moment";
 import {SubstitutionService} from "../_services/substitution.service";
@@ -131,6 +123,5 @@ export class TeacherComponent implements OnInit {
     this.substitutionService.decline(sub).subscribe(() => {
       this.getIncomingSubstitutions();
     })
-
   }
 }

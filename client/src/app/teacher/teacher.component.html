@@ -49,7 +49,7 @@
           <ng-template ngbTabContent>
             <div class="row mt-2">
               <div class="col-xl">
-                <ng-container *ngTemplateOutlet="invoiceData"></ng-container>
+                <app-invoice [lessons]="lessons"></app-invoice>
               </div>
             </div>
           </ng-template>
@@ -153,86 +153,6 @@
       </tr>
       </tbody>
     </table>
-  </div>
-</ng-template>
-
-<ng-template #invoiceData>
-
-  <div class="row mb-3">
-    <div class="col">
-      <!--<input type="text" class="form-control" ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()"/>-->
-      <div ngbDropdown class="d-inline-block">
-        <button class="btn btn-outline-primary" ngbDropdownToggle>Select month</button>
-        <div ngbDropdownMenu>
-          <button class="dropdown-item">January 2019</button>
-          <button class="dropdown-item">February 2019</button>
-          <button class="dropdown-item">March 2019</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-          <th style="text-align: end">Date</th>
-          <th style="text-align: center">Normal lesson 90 Min</th>
-          <th style="text-align: center">Normal lesson 60 Min</th>
-          <th style="text-align: center">Tutoring lesson 60 Min</th>
-          <th style="text-align: center">Conversation class 60 Min</th>
-          </thead>
-          <tbody>
-          <tr>
-            <th scope="row" style="text-align: end">1 Feb 2019</th>
-            <td style="text-align: center">
-              {{90*2}}
-            </td>
-            <td style="text-align: center">
-              {{60*2}}
-            </td>
-            <td style="text-align: center">
-              {{60*0}}
-            </td>
-            <td style="text-align: center">
-              {{60*1}}
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" style="text-align: end">2 Feb 2019</th>
-            <td style="text-align: center">
-              {{90*1}}
-            </td>
-            <td style="text-align: center">
-              {{60*1}}
-            </td>
-            <td style="text-align: center">
-              {{60*3}}
-            </td>
-            <td style="text-align: center">
-              {{60*1}}
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" style="text-align: end">3 Feb 2019</th>
-            <td style="text-align: center">
-              {{90*0}}
-            </td>
-            <td style="text-align: center">
-              {{60*2}}
-            </td>
-            <td style="text-align: center">
-              {{60*2}}
-            </td>
-            <td style="text-align: center">
-              {{60*2}}
-            </td>
-          </tr>
-
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
 </ng-template>
 

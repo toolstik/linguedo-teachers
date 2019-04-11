@@ -20,6 +20,7 @@ import { DatepickerRangeComponent } from './common/datepicker-range/datepicker-r
 import { AlertComponent } from './alert/alert.component';
 import { DatepickerMultipleComponent } from './common/datepicker-multiple/datepicker-multiple.component';
 import { WindowComponent } from './common/window/window.component';
+import { InvoiceComponent } from './teacher/invoice/invoice.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { WindowComponent } from './common/window/window.component';
     DatepickerRangeComponent,
     AlertComponent,
     DatepickerMultipleComponent,
-    WindowComponent
+    WindowComponent,
+    InvoiceComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,29 @@
+<div class="row mb-3">
+  <div class="col">
+    <myDropdown [source]="invoiceMonths()"
+                [displayFunc]="monthDisplayFunc"
+                [placeHolder]="'Select month'"
+                [(ngModel)]="monthSelected"></myDropdown>
+  </div>
+</div>
+<div class="row" *ngIf="monthSelected">
+  <div class="col">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <th style="text-align: end">Date</th>
+        <th style="text-align: center" *ngFor="let c of classTypes">{{c.name}}</th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let d of getDates(monthSelected)">
+          <th scope="row" style="text-align: end">{{d | date:'d MMMM yyyy'}}</th>
+          <td style="text-align: center" *ngFor="let c of classTypes">
+            {{getCellValue(d,c)}}
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

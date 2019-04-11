@@ -22,6 +22,10 @@ export class LessonService {
     return this.jsonp.exec<LessonDto[]>(this.resource, 'byCurrentTeacher');
   }
 
+  getByCurrentTeacherAndMonth(month: Date) {
+    return this.jsonp.exec<LessonDto[]>(this.resource, 'byCurrentTeacherAndMonth', month);
+  }
+
   saveTeacherLesson(lesson: LessonDto, lessonStudents: LessonStudentDto[]) {
     return this.jsonp.exec(this.resource, 'save', {
       lesson: lesson,
