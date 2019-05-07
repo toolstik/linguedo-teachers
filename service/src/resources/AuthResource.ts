@@ -6,9 +6,12 @@ class AuthResource {
 
     @requestMapping('login')
     login(data: {
-        token: string;
+        email: string;
+        password: string;
     }) {
-        return AuthService.login(data.token);
+        const user = AuthService.login(data.email, data.password);
+        delete user["password"];
+        return user;
     }
     
 }

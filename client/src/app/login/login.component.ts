@@ -9,9 +9,8 @@ import {BehaviorSubject} from "rxjs";
 })
 export class LoginComponent implements OnInit {
 
-  token: string;
-
-  error$ = new BehaviorSubject(null);
+  email: string;
+  password: string;
 
   constructor(private authService: AuthService) {
   }
@@ -20,15 +19,8 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    if (this.token)
-      this.authService.login(this.token).subscribe(
-        () => {
-          this.error$.next(null);
-        },
-        error => {
-          this.error$.next(error.message);
-        }
-      );
+    if (this.password && this.email)
+      this.authService.login(this.email, this.password).subscribe();
   }
 
   onKeydown(event) {

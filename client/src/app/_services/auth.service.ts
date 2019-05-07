@@ -35,8 +35,8 @@ export class AuthService {
     return this.currentUserSubj.asObservable();
   }
 
-  login(token: string) {
-    return this.jsonp.exec(this.resource, 'login', {token: token})
+  login(email: string, password: string) {
+    return this.jsonp.exec(this.resource, 'login', {email: email, password: password})
       .pipe(map(i => {
         AuthService.setCurrentUser(i);
         this.currentUserSubj.next(i);

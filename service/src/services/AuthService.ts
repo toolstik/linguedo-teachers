@@ -10,11 +10,14 @@ export class AuthService {
         this.currentUser = this.getUserByToken(token);
     }
 
-    static login(token: string) {
-        const user = this.getUserByToken(token);
+    static login(email:string, password: string) {
+        const user = this.getUserById(email);
 
         if (!user)
-            throw new ServiceError('forbidden', 'Access token is invalid or expired');
+            throw new ServiceError('forbidden', `User ${email} is not found. Please contact your system administrator`);
+
+        if(password != user.password)
+            throw new ServiceError('forbidden', `Invalid password`);
 
         return user;
     }
@@ -24,6 +27,14 @@ export class AuthService {
             return null;
 
         const user = new Model().user.findOne({ token: token });
+        return user as UserDto;
+    }
+
+    private static getUserById(email: string) {
+        if (!email)
+            return null;
+
+        const user = new Model().user.findOne({ id: email });
         return user as UserDto;
     }
 

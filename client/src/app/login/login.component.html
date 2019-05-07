@@ -4,21 +4,26 @@
       <div class="card card-signin mt-5">
         <div class="card-body">
           <div class="form-label-group">
+            <input class="form-control mb-2"
+                   placeholder="Email"
+                   type="email"
+                   required
+                   [(ngModel)]="email">
             <input class="form-control"
-                   placeholder="Access key"
+                   placeholder="Password"
+                   type="password"
                    required
                    (keydown)="onKeydown($event)"
-                   [(ngModel)]="token">
+                   [(ngModel)]="password">
           </div>
-          <button class="btn btn-lg btn-primary btn-block text-uppercase mt-3"
-                  type="button"
-                  (click)="login()">Sign in
-          </button>
+          <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block text-uppercase mt-3"
+                    type="button"
+                    (click)="login()">Sign in
+            </button>
+          </div>
         </div>
 
-      </div>
-      <div *ngIf="(error$ | async) as err" (click)="error$.next(null)" class="alert alert-danger mt-3" role="alert">
-        {{err}}
       </div>
     </div>
   </div>
